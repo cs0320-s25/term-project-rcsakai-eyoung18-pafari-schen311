@@ -8,12 +8,10 @@ target/
 pom.xml.bak
 
 # node, vite
-node_modules/
 client/*.js
 target/
 build/
 dist/
-.env
 test-results/
 playwright-report/
 playwright/.cache/
