@@ -17,8 +17,8 @@
 }
 .homepage-container {
   position: absolute;
-  left: 20%;
-  width: 100%;
+  left: 40%;
+  width: 30%;
   max-width: 800px;
   top: 0px;
   display: flex;
@@ -49,4 +49,26 @@
   background-color: white;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
   color:rgb(0, 0, 0);
+}
+
+.progress-container {
+  position: absolute;
+  left: 25%;
+  width: 100%;
+  max-width: 800px;
+  top: -15px;
+  display: flex;
+  flex-direction: column;
+  padding-top: 40px;
+}
+
+.sign-out-button {
+  /* to finish*/
+  position: absolute;
+  left: 50%;
+  top: -10px;
+}
+
+.dropdown {
+  border-radius: 10px;
 }

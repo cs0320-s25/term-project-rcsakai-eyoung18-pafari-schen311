@@ -4,8 +4,8 @@ import { Dispatch, SetStateAction, forwardRef } from 'react';
 // Remember that parameter names don't necessarily need to overlap;
 // I could use different variable names in the actual function.
 interface ControlledInputProps {
-    value: string, 
-    setValue: Dispatch<SetStateAction<string>>,
+    value: number | undefined, 
+    setValue: Dispatch<SetStateAction<number | undefined>>,
     ariaLabel: string,
 
   }
@@ -19,8 +19,8 @@ interface ControlledInputProps {
           type="text"
           className="repl-command-box"
           value={value}
-          placeholder="Enter your query here!"
-          onChange={(ev) => setValue(ev.target.value)}
+          placeholder="Enter your amount consumed today here!"
+          onChange={(ev) => setValue(Number(ev.target.value))}
           aria-label={ariaLabel}
           ref={ref} // Forward the ref to the input element
         />

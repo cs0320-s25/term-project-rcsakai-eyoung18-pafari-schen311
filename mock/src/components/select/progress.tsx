@@ -16,15 +16,14 @@ ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Legend, 
 
 export interface tableLayout {
   headers: Array<string>;
-  data: Array<Array<number>>;
+  data: Array<Record<string, number[]>>;
 }
 
-const mock_set: tableLayout = {
-  headers: ["sugar", "carbs", "proteins"],
-  data: [
-    [1, 2, 3],
-    [3, 4, 5],
-    [2, 4, 6]
+export const mock_set: tableLayout = {
+  headers: ["sugar", "carbs", "Protein"],
+  data: [{"1-2-2025": [5, 10, 7]}, 
+  {"1-7-2025": [4, 15, 4]}, 
+  {"1-9-2025": [7, 12, 9]}, 
   ]
 };
 
@@ -32,12 +31,16 @@ export function Progress() {
   const [chartData, setChartData] = useState<ChartData<"line"> | null>(null);
 
   useEffect(() => {
+    const dataValues = mock_set.data.map(record => Object.values(record)[0]);
+
     const [sugar, carbs, proteins] = mock_set.headers.map((_, colIndex) =>
-      mock_set.data.map(row => row[colIndex])
+      dataValues.map(row => row[colIndex])
     );
 
+    const dates = mock_set.data.map(record => Object.keys(record)[0]);
+
     setChartData({
-      labels: ["Day 1", "Day 2", "Day 3"],
+      labels: dates,
       datasets: [
         {
           label: "Sugar",
@@ -62,12 +65,10 @@ export function Progress() {
   }, []);
 
   return (
-    <div style={{ width: "80%", margin: "0 auto" }}>
-      <h2>Your Nutrient Intake Over Time</h2>
+    <div className="progress-container">
       {chartData ? (
-        <Line data={chartData} />
-      ) : (
-        <p>Loading chart...</p>
+        <Line data={chartData} /> ) : (
+      <p>Loading chart...</p>
       )}
     </div>
   );

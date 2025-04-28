@@ -1,78 +1,73 @@
-import { useRef, useState } from "react";
+import { List } from "lucide-react";
+import { mock } from "node:test";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import "../../styles/main.css";
 import { ControlledInput } from "./controlledInput";
+import { mock_set } from "./progress";
 
-export function HomePage() {
-    const [calorieString, setCalorie] = useState<string>('');
-    const [proteinString, setProtein] = useState<string>('');
-    const [carbString, setCarb] = useState<string>('');
-    const [sugarString, setSugar] = useState<string>('');
+interface InputProps {
+    currentMacro: string;
+    setCurrentMacro: Dispatch<SetStateAction<string>>;
+}
+export function HomePage(props: InputProps) {
+    const dropdownRef = useRef<HTMLSelectElement | null>(null);
+    const inputRef = useRef<HTMLInputElement | null>(null);
+    const [inputValue, setInputValue] = useState<number>();
 
-    const searchRef = useRef<HTMLInputElement | null>(null);
+    function handleSelect(inputMacro: string) {
+        if (!mock_set.headers.includes(inputMacro)) return;
+            props.setCurrentMacro(inputMacro)
+    }
 
+    function handleSubmit (inputAmount: number) {
+        let today = new Date().toISOString().slice(0, 10)
+        const row_index = mock_set.headers.indexOf(props.currentMacro)
+        if (row_index == -1) {
+            console.error("That nutrient does not exist")
+        }
+        console.log(props.currentMacro)
+        const foundRecord = mock_set.data.find(record => 
+            Object.keys(record)[0] === today
+          );
+          
+        if (foundRecord) {
+            foundRecord[today][row_index] = inputAmount
+        }
+        else {
+            const newValues = new Array(mock_set.headers.length).fill(0);
+            newValues[row_index] = inputAmount;
+            const newAdd = { [today]: newValues };
+            mock_set.data.push(newAdd);
+        }
+        console.log(mock_set.data)
+    }
     // to finish -- this saves the inputted information
     // const handleSubmitInformation
     // <button onClick={() => handleSubmitInformation()}>Save Information</button>
     return (
         <div className="homepage-container">
             <h1 className="homepage-header">Track Your Daily Diet!</h1>
-            <div className="input-row">
-                <div className="input-box">
-                    <p>Calories</p>
-                    <ControlledInput
-                        value={calorieString}
-                        setValue={setCalorie}
-                        ariaLabel="calorie input"
-                        ref={searchRef}
-                    />
-                </div>
-                <div className="input-box">
-                    <p>Carbohydrates</p>
-                    <ControlledInput
-                        value={carbString}
-                        setValue={setCarb}
-                        ariaLabel="carb input"
-                        ref={searchRef}
-                    />
-                </div>
-                <div className="input-box">
-                    <p>Sugars</p>
-                    <ControlledInput
-                        value={sugarString}
-                        setValue={setSugar}
-                        ariaLabel="sugar input"
-                        ref={searchRef}
-                    />
-                </div>
-                <div className="input-box">
-                    <p>Protein</p>
-                    <ControlledInput
-                        value={proteinString}
-                        setValue={setProtein}
-                        ariaLabel="protein input"
-                        ref={searchRef}
-                    />
-                </div>
-                <div className="input-box">
-                    <p>Weight</p>
-                    <ControlledInput
-                        value={carbString}
-                        setValue={setCarb}
-                        ariaLabel="carb input"
-                        ref={searchRef}
-                    />
-                </div>
-                <div className="input-box">
-                    <p>Height</p>
-                    <ControlledInput
-                        value={carbString}
-                        setValue={setCarb}
-                        ariaLabel="carb input"
-                        ref={searchRef}
-                    />
-                </div>
-            </div>
+            <select ref={dropdownRef}
+                className="dropdown"
+                aria-label="dataset dropdown"
+                onChange={(e) => handleSelect(e.target.value)}>
+                <option value="">Choose a Macronutrient</option>
+
+
+                {mock_set.headers.map((nutrient) => (
+                    <option key={nutrient} value={nutrient}>
+                        {nutrient}
+                    </option>
+                ))}
+            </select>
+            <p></p>
+            <ControlledInput 
+            value={inputValue}
+            setValue={setInputValue}
+            ariaLabel="Command input"
+            ref={inputRef} />
+            <p></p>
+            <button onClick={() => handleSubmit(inputValue ?? 0)}>Save Information</button>
         </div>
-    );
-    
+    );  
 }

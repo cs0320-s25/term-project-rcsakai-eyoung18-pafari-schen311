@@ -16,11 +16,12 @@ export function Select() {
   const handleHomeClick = () => setCurrentPage("home");
   const handleProgressClick = () => setCurrentPage("progress");
   const handleFeedbackClick = () => setCurrentPage("feedback");
+  const [currentMacro, setCurrentMacro] = useState<string>("");
 
   const renderPage = () => {
     switch (currentPage) {
       case "home":
-        return <HomePage/>;
+        return <HomePage currentMacro={currentMacro} setCurrentMacro={setCurrentMacro}/>;
       case "progress":
         return <Progress />;
       case "feedback":
