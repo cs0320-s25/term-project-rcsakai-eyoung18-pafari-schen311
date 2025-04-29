@@ -32,7 +32,6 @@ export function Progress() {
 
   useEffect(() => {
     const dataValues = mock_set.data.map(record => Object.values(record)[0]);
-
     const [sugar, carbs, proteins] = mock_set.headers.map((_, colIndex) =>
       dataValues.map(row => row[colIndex])
     );

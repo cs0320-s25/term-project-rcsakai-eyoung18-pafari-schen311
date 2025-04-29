@@ -31,7 +31,7 @@ export function HomePage(props: InputProps) {
           );
           
         if (foundRecord) {
-            foundRecord[today][row_index] = inputAmount
+            foundRecord[today][row_index] = inputAmount + foundRecord[today][row_index]
         }
         else {
             const newValues = new Array(mock_set.headers.length).fill(0);

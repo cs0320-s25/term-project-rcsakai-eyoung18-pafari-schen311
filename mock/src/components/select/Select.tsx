@@ -5,6 +5,7 @@ import { Progress } from "./progress";
 import { Feedback } from "./feedback";
 import { Home, ChartNoAxesCombined, MessageSquareText, ChartSpline } from "lucide-react";
 import { Chart } from "chart.js";
+import { ComparedProgress } from "./comparedProgress";
 
 /**
  * Controls overall view of the website.
@@ -14,18 +15,21 @@ export function Select() {
 
   // Explicit click handlers
   const handleHomeClick = () => setCurrentPage("home");
-  const handleProgressClick = () => setCurrentPage("progress");
+  const handleProgressClick = () => setCurrentPage("personal graphs");
   const handleFeedbackClick = () => setCurrentPage("feedback");
+  const handleComparedProgessClick = () => setCurrentPage("progress");
   const [currentMacro, setCurrentMacro] = useState<string>("");
 
   const renderPage = () => {
     switch (currentPage) {
       case "home":
         return <HomePage currentMacro={currentMacro} setCurrentMacro={setCurrentMacro}/>;
-      case "progress":
+      case "personal graphs":
         return <Progress />;
       case "feedback":
         return <Feedback />;
+      case "progress":
+        return <ComparedProgress />;
       default:
         return null;
     }
@@ -45,7 +49,7 @@ export function Select() {
           </li>
           <li
             className="flex items-center gap-4 cursor-pointer p-3 hover:bg-gray-200 rounded"
-            onClick={handleProgressClick}
+            onClick={handleComparedProgessClick}
           >
             <ChartNoAxesCombined size={50}/>
             <span className="text-lg">Progress</span>
