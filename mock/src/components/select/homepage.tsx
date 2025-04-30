@@ -39,7 +39,6 @@ export function HomePage(props: InputProps) {
             const newAdd = { [today]: newValues };
             mock_set.data.push(newAdd);
         }
-        console.log(mock_set.data)
     }
     // to finish -- this saves the inputted information
     // const handleSubmitInformation

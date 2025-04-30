@@ -3,9 +3,10 @@ import { useState } from "react";
 import { HomePage } from "./homepage";
 import { Progress } from "./progress";
 import { Feedback } from "./feedback";
-import { Home, ChartNoAxesCombined, MessageSquareText, ChartSpline } from "lucide-react";
+import { Home, ChartNoAxesCombined, MessageSquareText, ChartSpline, CircleUserRound } from "lucide-react";
 import { Chart } from "chart.js";
 import { ComparedProgress } from "./comparedProgress";
+import { Profile } from "./profile";
 
 /**
  * Controls overall view of the website.
@@ -18,7 +19,9 @@ export function Select() {
   const handleProgressClick = () => setCurrentPage("personal graphs");
   const handleFeedbackClick = () => setCurrentPage("feedback");
   const handleComparedProgessClick = () => setCurrentPage("progress");
+  const handleProfileClick = () => setCurrentPage("profile")
   const [currentMacro, setCurrentMacro] = useState<string>("");
+  const [information, setInformation] = useState<[string, string, number, number]>(["", "", 0, 0]);
 
   const renderPage = () => {
     switch (currentPage) {
@@ -30,6 +33,8 @@ export function Select() {
         return <Feedback />;
       case "progress":
         return <ComparedProgress />;
+      case "profile":
+        return <Profile information={information} setInformation={setInformation}/>;
       default:
         return null;
     }
@@ -67,6 +72,13 @@ export function Select() {
           >
             <MessageSquareText size={50}/>
             <span className="text-lg">Feedback</span>
+          </li>
+          <li
+            className="flex items-center gap-4 cursor-pointer p-3 hover:bg-gray-200 rounded"
+            onClick={handleProfileClick}
+          >
+            <CircleUserRound size={50}/>
+            <span className="text-lg">Profile</span>
           </li>
         </ul>
       </div>

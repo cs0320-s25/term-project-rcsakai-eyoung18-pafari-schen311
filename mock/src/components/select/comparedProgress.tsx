@@ -14,27 +14,29 @@ import { Bar } from "react-chartjs-2";
 import { mock_set } from "./progress";
 import { useEffect, useState } from "react";
 
-// Register components
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+
+// Returns average consumption from total data
 
 export function ComparedProgress() {
   function average_list (input: number[][]): number[] {
-    if (input.length == 0) {
+    const input_length = input.length
+    if (input_length == 0) {
       return []
     }
     else {
-      const input_length = input.length
       const final_list: number[] = [];
       for (const list of input) {
-        let list_avg: number = 0
+        let list_total: number = 0
         for (let i = 0; i < list.length; i++) {
-          list_avg += list[i]
+          list_total += list[i]
         }
-        final_list.push(list_avg/input_length)
+        final_list.push(list_total/list.length)
       }
       return final_list
     }
   }
+  
   const [chartData, setChartData] = useState<ChartData<"bar"> | null>(null);
 
   const legendSymbols = ["■", "●", "▲"];
