@@ -1,9 +1,10 @@
-import { List } from "lucide-react";
+import { Icon, List, SmilePlus } from "lucide-react";
 import { mock } from "node:test";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import "../../styles/main.css";
 import { ControlledInput } from "./controlledInput";
 import { mock_set } from "./progress";
+import { Frown, Meh, Smile } from "lucide-react";
 
 interface InputProps {
     currentMacro: string;
@@ -13,6 +14,7 @@ export function HomePage(props: InputProps) {
     const dropdownRef = useRef<HTMLSelectElement | null>(null);
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [inputValue, setInputValue] = useState<number>();
+    const currentStreak: number = 20;
 
     function handleSelect(inputMacro: string) {
         if (!mock_set.headers.includes(inputMacro)) return;
@@ -39,6 +41,21 @@ export function HomePage(props: InputProps) {
             const newAdd = { [today]: newValues };
             mock_set.data.push(newAdd);
         }
+    }
+    function happySadFace (currentStreak: number): JSX.Element | null {
+        if (currentStreak == 0) {
+            return <Frown size={50}/>;
+        }
+        else if (currentStreak > 0 && currentStreak < 5) {
+            return <Meh size={50}/>;
+        } 
+        else if (currentStreak > 5 && currentStreak < 10) {
+            return <Smile size={50}/>;
+        }
+        else if (currentStreak > 10) {
+            return <SmilePlus size={50}/>;
+        }
+        return null
     }
     // to finish -- this saves the inputted information
     // const handleSubmitInformation
@@ -67,6 +84,10 @@ export function HomePage(props: InputProps) {
             ref={inputRef} />
             <p></p>
             <button onClick={() => handleSubmit(inputValue ?? 0)}>Save Information</button>
+            <div className="icon">
+                {happySadFace(currentStreak)} Current Day Streak: {currentStreak}
+            </div>
+
         </div>
     );  
 }
