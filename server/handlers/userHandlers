@@ -1,0 +1,45 @@
+const users = require("../data/users");
+
+// Add a new user entry (or update existing)
+function userAdd(req, res) {
+  const { userId, date, data } = req.body;
+  if (!userId || !date || !data) {
+    return res.status(400).json({ message: "Missing required fields." });
+  }
+
+  if (!users.has(userId)) {
+    users.set(userId, []);
+  }
+
+  users.get(userId).push({ date, data });
+  res.status(200).json({ message: "User data added successfully." });
+}
+
+// Clear all user data
+function userClear(req, res) {
+  const { userId } = req.body;
+  if (!userId || !users.has(userId)) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  users.delete(userId);
+  res.status(200).json({ message: "User data cleared." });
+}
+
+// Search user data by date
+function userSearch(req, res) {
+  const { userId, date } = req.query;
+  if (!userId || !date) {
+    return res.status(400).json({ message: "Missing query parameters." });
+  }
+
+  const userData = users.get(userId);
+  if (!userData) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  const entries = userData.filter((entry) => entry.date === date);
+  res.status(200).json({ data: entries });
+}
+
+module.exports = { userAdd, userClear, userSearch };

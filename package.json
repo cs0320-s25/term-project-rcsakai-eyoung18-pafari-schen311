@@ -1,9 +1,30 @@
 {
   "dependencies": {
     "@clerk/clerk-react": "^5.30.2",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
     "lucide-react": "^0.503.0"
   },
   "devDependencies": {
     "@types/react": "^19.1.2"
-  }
+  },
+  "name": "term-project-rcsakai-eyoung18-pafari-schen311",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cs0320-s25/term-project-rcsakai-eyoung18-pafari-schen311.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cs0320-s25/term-project-rcsakai-eyoung18-pafari-schen311/issues"
+  },
+  "homepage": "https://github.com/cs0320-s25/term-project-rcsakai-eyoung18-pafari-schen311#readme"
 }
