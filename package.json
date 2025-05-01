@@ -1,5 +1,9 @@
 {
   "dependencies": {
+    "@clerk/clerk-react": "^5.30.2",
     "lucide-react": "^0.503.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.2"
   }
 }
