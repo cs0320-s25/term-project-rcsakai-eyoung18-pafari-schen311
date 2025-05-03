@@ -9,11 +9,11 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
-public class AddUserProfile implements Route {
+public class AddUserProfileHandler implements Route {
 
   private final StorageInterface storageHandler;
 
-  public AddUserProfile(StorageInterface storageHandler) {
+  public AddUserProfileHandler(StorageInterface storageHandler) {
     this.storageHandler = storageHandler;
   }
 

@@ -2,8 +2,9 @@ package edu.brown.cs.student.main.server;
 
 import java.io.IOException;
 
-import edu.brown.cs.student.main.server.handlers.AddUserProfile;
+import edu.brown.cs.student.main.server.handlers.AddUserProfileHandler;
 import edu.brown.cs.student.main.server.handlers.ClearUserHandler;
+import edu.brown.cs.student.main.server.handlers.GetUserProfileHandler;
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
 import edu.brown.cs.student.main.server.storage.StorageInterface;
 import spark.Filter;
@@ -29,7 +30,8 @@ public class Server {
       firebaseUtils = new FirebaseUtilities();
 
       Spark.get("clear-user", new ClearUserHandler(firebaseUtils));
-      Spark.get("add-user-profile", new AddUserProfile(firebaseUtils));
+      Spark.get("add-user-profile", new AddUserProfileHandler(firebaseUtils));
+      Spark.get("get-user-profile", new GetUserProfileHandler(firebaseUtils));
 
       Spark.notFound(
           (request, response) -> {

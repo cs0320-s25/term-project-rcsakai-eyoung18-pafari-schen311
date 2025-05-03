@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState, useEffect } from "react";
 import "../../styles/main.css";
 import { ControlledInputProfile } from "./controlledInputsProfile";
 import { useUser } from "@clerk/clerk-react";
@@ -25,6 +25,24 @@ export function Profile(props: profileProps) {
   const [weight, setWeight] = useState<string>(
     (props.information[3] as string) || ""
   );
+
+  useEffect(() => {
+    if (user?.id) {
+      const uid = "profile-" + user.id;
+      fetch(`http://localhost:3232/get-user-profile?uid=${uid}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.response_type === "success" && data.profile) {
+            const { name, birthday, height, weight } = data.profile;
+            setName(name);
+            setBirthday(birthday);
+            setHeight(height);
+            setWeight(weight);
+            props.setInformation([name, birthday, height, weight]);
+          }
+        });
+    }
+  }, [user?.id]);
 
   function handleSave() {
     props.setInformation([name, birthday, height, weight]);
