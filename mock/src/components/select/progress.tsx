@@ -11,6 +11,7 @@ import {
   ChartData,
 } from "chart.js";
 import { useEffect, useState } from "react";
+import { useUser } from "@clerk/clerk-react";
 
 ChartJS.register(
   LineElement,
@@ -36,50 +37,86 @@ export const mock_set: tableLayout = {
 };
 
 export function Progress() {
-  const [chartData, setChartData] = useState<ChartData<"line"> | null>(null);
+  const [chartData, setChartData] = useState<Record<string, number[]>>({});
+  const { user } = useUser();
+
+  const [labels, setLabels] = useState<string[]>([]);
+  const [selectedNutrient, setSelectedNutrient] = useState("calories");
+
+  const nutrientColors: Record<string, string> = {
+    calories: "red",
+    sugar: "orange",
+    carbs: "blue",
+    protein: "green",
+  };
 
   useEffect(() => {
-    const dataValues = mock_set.data.map((record) => Object.values(record)[0]);
-    const [calories, sugar, carbs, proteins] = mock_set.headers.map(
-      (_, colIndex) => dataValues.map((row) => row[colIndex])
-    );
+    async function fetchData() {
+      if (!user?.id) return;
+      const res = await fetch(`http://localhost:3232/get-daily?uid=${user.id}`);
+      const json = await res.json();
+      if (json.response_type !== "success") {
+        console.error("Failed to fetch daily data:", json.error);
+        return;
+      }
+      const data = json.data;
 
-    const dates = mock_set.data.map((record) => Object.keys(record)[0]);
+      const dates = Object.keys(data).sort();
+      const nutrients = {
+        calories: [] as number[],
+        sugar: [] as number[],
+        carbs: [] as number[],
+        protein: [] as number[],
+      };
 
-    setChartData({
-      labels: dates,
-      datasets: [
-        {
-          label: "Calories",
-          data: calories,
-          borderColor: "red",
-          backgroundColor: "rgba(255, 0, 0, 0.1)",
-        },
-        {
-          label: "Sugar",
-          data: sugar,
-          borderColor: "red",
-          backgroundColor: "rgba(255, 0, 0, 0.1)",
-        },
-        {
-          label: "Carbs",
-          data: carbs,
-          borderColor: "blue",
-          backgroundColor: "rgba(0, 0, 255, 0.1)",
-        },
-        {
-          label: "Protein",
-          data: proteins,
-          borderColor: "green",
-          backgroundColor: "rgba(0, 255, 0, 0.1)",
-        },
-      ],
-    });
-  }, []);
+      for (const date of dates) {
+        const entry = data[date];
+        nutrients.calories.push(Number(entry.calories));
+        nutrients.sugar.push(Number(entry.sugar));
+        nutrients.carbs.push(Number(entry.carbs));
+        nutrients.protein.push(Number(entry.protein));
+      }
+
+      setLabels(dates);
+      setChartData(nutrients);
+    }
+
+    fetchData();
+  }, [user]);
+
+  const chart: ChartData<"line"> = {
+    labels,
+    datasets: [
+      {
+        label: selectedNutrient,
+        data: chartData[selectedNutrient] || [],
+        borderColor: nutrientColors[selectedNutrient],
+        backgroundColor: "rgba(190, 190, 190, 0.9)",
+      },
+    ],
+  };
 
   return (
     <div className="progress-container">
-      {chartData ? <Line data={chartData} /> : <p>Loading chart...</p>}
+      <div className="dropdown-container" style={{ marginBottom: "1rem" }}>
+        <label htmlFor="nutrient-select">Select Nutrient: </label>
+        <select
+          id="nutrient-select"
+          value={selectedNutrient}
+          onChange={(e) => setSelectedNutrient(e.target.value)}
+        >
+          {Object.keys(chartData).map((nutrient) => (
+            <option key={nutrient} value={nutrient}>
+              {nutrient}
+            </option>
+          ))}
+        </select>
+      </div>
+      {chart && chart.datasets[0].data.length > 0 ? (
+        <Line data={chart} />
+      ) : (
+        <p>Loading chart...</p>
+      )}
     </div>
   );
 }

@@ -5,6 +5,7 @@ import "../../styles/main.css";
 import { ControlledSelect } from "./controlledSelect";
 import { mock_set } from "./progress";
 import { Frown, Meh, Smile } from "lucide-react";
+import { useUser } from "@clerk/clerk-react";
 
 interface InputProps {
   currentMacro: string;
@@ -16,57 +17,48 @@ export function HomePage(props: InputProps) {
   const [proteinString, setProtein] = useState<string>("");
   const [carbString, setCarb] = useState<string>("");
   const [sugarString, setSugar] = useState<string>("");
+  const [date, setDate] = useState<string>("");
+
+  const { user } = useUser();
 
   const searchRef = useRef<HTMLSelectElement | null>(null);
 
-  const mockCalorieOptions = [
-    "500-1000",
-    "1001-1500",
-    "1501-2000",
-    "2001-2500",
-    "2501-3000",
-  ];
-  const mockCarbOptions = ["10-20g", "21-30g", "31-40g", "41-50g"];
-  const mockSugarOptions = ["5-10g", "11-15g", "16-20g", "21-25g"];
-  const mockProteinOptions = ["10-20g", "21-30g", "31-40g", "41-50g"];
+  const mockCalorieOptions = ["1000", "1500", "2000", "2500", "3000"];
+  const mockCarbOptions = ["10", "20", "30", "40"];
+  const mockSugarOptions = ["5", "10", "15", "20"];
+  const mockProteinOptions = ["20", "30", "40", "50"];
 
   function handleSelect(inputMacro: string) {
     if (!mock_set.headers.includes(inputMacro)) return;
     props.setCurrentMacro(inputMacro);
   }
 
-  function handleSubmit(values: Record<string, string>) {
-    const today = new Date().toISOString().slice(0, 10);
+  function handleSubmit(values: Record<string, string>, date: string) {
+    const uid = user?.id;
 
-    Object.entries(values).forEach(([macro, stringValue]) => {
-      const row_index = mock_set.headers.indexOf(macro);
-      if (row_index === -1) {
-        console.error(`Nutrient '${macro}' does not exist`);
-        return;
-      }
+    if (!uid) {
+      console.error("User is not authenticated.");
+      return;
+    }
 
-      // Extract number from string range like "500-1000" or "10-20g"
-      const match = stringValue.match(/(\d+)/g);
-      if (!match) {
-        console.error(`Invalid format for ${macro}: ${stringValue}`);
-        return;
-      }
-      const nums = match.map(Number);
-      const inputAmount =
-        nums.length === 1 ? nums[0] : Math.round((nums[0] + nums[1]) / 2);
-
-      const foundRecord = mock_set.data.find(
-        (record) => Object.keys(record)[0] === today
-      );
-
-      if (foundRecord) {
-        foundRecord[today][row_index] += inputAmount;
-      } else {
-        const newValues = new Array(mock_set.headers.length).fill(0);
-        newValues[row_index] = inputAmount;
-        mock_set.data.push({ [today]: newValues });
-      }
+    const params = new URLSearchParams({
+      uid: uid,
+      date: date,
+      calories: values.Calories || "no input",
+      sugar: values.Sugars || "no input",
+      carbs: values.Carbohydrates || "no input",
+      protein: values.Protein || "no input",
     });
+
+    fetch(`http://localhost:3232/add-daily?${params.toString()}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.response_type === "success") {
+          console.log("Daily log added successfully.");
+        } else {
+          console.error("Failed to add daily log:", data.error);
+        }
+      });
   }
 
   const currentStreak: number = 20;
@@ -91,6 +83,15 @@ export function HomePage(props: InputProps) {
     <div className="homepage-container">
       <h1 className="homepage-header">Track Your Daily Diet!</h1>
       <div className="input-row">
+        <div>
+          <label htmlFor="log-date">Select Date:</label>
+          <input
+            type="date"
+            id="log-date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+        </div>
         <div className="input-box">
           <p>Calories</p>
           <ControlledSelect
@@ -134,12 +135,15 @@ export function HomePage(props: InputProps) {
         <p></p>
         <button
           onClick={() =>
-            handleSubmit({
-              Calories: calorieString,
-              Carbohydrates: carbString,
-              Sugars: sugarString,
-              Protein: proteinString,
-            })
+            handleSubmit(
+              {
+                Calories: calorieString,
+                Carbohydrates: carbString,
+                Sugars: sugarString,
+                Protein: proteinString,
+              },
+              date
+            )
           }
         >
           Save Information
