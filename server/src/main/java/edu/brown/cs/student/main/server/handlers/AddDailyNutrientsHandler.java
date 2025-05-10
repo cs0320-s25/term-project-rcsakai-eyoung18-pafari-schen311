@@ -34,10 +34,10 @@ public class AddDailyNutrientsHandler implements Route {
 
       Map<String, Object> dailyNutrients = new HashMap<>();
       dailyNutrients.put("user-id", uid);
-      dailyNutrients.put("calories", calories);
-      dailyNutrients.put("sugar", sugar);
-      dailyNutrients.put("carbs", carbs);
-      dailyNutrients.put("protein", protein);
+      dailyNutrients.put("Calories", calories);
+      dailyNutrients.put("Sugar", sugar);
+      dailyNutrients.put("Carbs", carbs);
+      dailyNutrients.put("Protein", protein);
       dailyNutrients.put("date", date);
       dailyNutrients.put("time", LocalDateTime.now().toString());
 

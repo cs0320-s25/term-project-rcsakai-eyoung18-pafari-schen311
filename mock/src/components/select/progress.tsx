@@ -42,13 +42,13 @@ export function Progress() {
   const { user } = useUser();
 
   const [labels, setLabels] = useState<string[]>([]);
-  const [selectedNutrient, setSelectedNutrient] = useState("calories");
+  const [selectedNutrient, setSelectedNutrient] = useState("Calories");
 
   const nutrientColors: Record<string, string> = {
-    calories: "red",
-    sugar: "orange",
-    carbs: "blue",
-    protein: "green",
+    Calories: "red",
+    Sugar: "orange",
+    Carbs: "blue",
+    Protein: "green",
   };
 
   useEffect(() => {
@@ -64,18 +64,18 @@ export function Progress() {
 
       const dates = Object.keys(data).sort();
       const nutrients = {
-        calories: [] as number[],
-        sugar: [] as number[],
-        carbs: [] as number[],
-        protein: [] as number[],
+        Calories: [] as number[],
+        Sugar: [] as number[],
+        Carbs: [] as number[],
+        Protein: [] as number[],
       };
 
       for (const date of dates) {
         const entry = data[date];
-        nutrients.calories.push(Number(entry.calories));
-        nutrients.sugar.push(Number(entry.sugar));
-        nutrients.carbs.push(Number(entry.carbs));
-        nutrients.protein.push(Number(entry.protein));
+        nutrients.Calories.push(Number(entry.Calories));
+        nutrients.Sugar.push(Number(entry.Sugar));
+        nutrients.Carbs.push(Number(entry.Carbs));
+        nutrients.Protein.push(Number(entry.Protein));
       }
 
       setLabels(dates);

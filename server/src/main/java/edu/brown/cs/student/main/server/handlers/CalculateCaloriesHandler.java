@@ -50,8 +50,8 @@ public class CalculateCaloriesHandler implements Route {
       }
 
       Object ageObj = userData.get("age");
-      Object heightObj = userData.get("height");
-      Object weightObj = userData.get("weight");
+      Object heightObj = userData.get("updatedHeight");
+      Object weightObj = userData.get("updatedWeight");
       Object sexObj = userData.get("sex");
       Object ageGroupObj = userData.get("ageGroup");
       Object activityLevelObj = userData.get("activityLevel");
