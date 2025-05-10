@@ -68,13 +68,16 @@ public class AddUserProfileHandler implements Route {
       profileData.put("user-id", uid);
       profileData.put("name", name);
       profileData.put("sex", sex);
+      profileData.put("birthday", birthday);
       profileData.put("age", age);
-      profileData.put("height", heightVal);
-      profileData.put("weight", weightVal);
+      profileData.put("height", height);
+      profileData.put("updatedHeight", heightVal);
+      profileData.put("weight", weight);
+      profileData.put("updatedWeight", weightVal);
       profileData.put("activityLevel", activityLevel);
       profileData.put("ageGroup", ageGroup);
-      //profileData.put("heightUnit", heightUnit);
-      //profileData.put("weightUnit", weightUnit);
+      profileData.put("heightUnit", heightUnit);
+      profileData.put("weightUnit", weightUnit);
       profileData.put("time", LocalDateTime.now().toString());
 
       String docId = "profile-" + uid;
