@@ -29,7 +29,7 @@ export function Select() {
   const [currentMacro, setCurrentMacro] = useState<string>("");
   const [information, setInformation] = useState<
     [string, string, string, string, string, string, string, string]
-  >(["", "", "", "", "", "", "cm", "kg"]);
+  >(["", "", "", "", "", "", "", ""]);
 
   const renderPage = () => {
     switch (currentPage) {

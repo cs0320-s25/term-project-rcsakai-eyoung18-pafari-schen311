@@ -35,8 +35,12 @@ export function Profile(props: profileProps) {
   const [activityLevel, setActivityLevel] = useState<string>(
     (props.information[5] as string) || ""
   );
-  const [heightUnit, setHeightUnit] = useState<"cm" | "in">("cm");
-  const [weightUnit, setWeightUnit] = useState<"kg" | "lbs">("kg");
+  const [heightUnit, setHeightUnit] = useState<string>(
+    (props.information[6] as string) || ""
+  );
+  const [weightUnit, setWeightUnit] = useState<string>(
+    (props.information[7] as string) || ""
+  );
 
   useEffect(() => {
     if (user?.id) {
@@ -79,6 +83,10 @@ export function Profile(props: profileProps) {
   }, [user?.id]);
 
   function handleSave() {
+    const safeHeightUnit = "cm" || heightUnit;
+    const safeWeightUnit = "kg" || weightUnit;
+    const safeActivityLevel = "Inactive" || activityLevel;
+
     props.setInformation([
       name,
       sex,
@@ -105,9 +113,9 @@ export function Profile(props: profileProps) {
       birthday,
       height,
       weight,
-      activityLevel,
-      heightUnit,
-      weightUnit,
+      activityLevel: safeActivityLevel,
+      heightUnit: safeHeightUnit,
+      weightUnit: safeWeightUnit,
     });
 
     fetch(`http://localhost:3232/add-user-profile?${params.toString()}`)

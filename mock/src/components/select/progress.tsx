@@ -116,7 +116,7 @@ export function Progress() {
       {chart && chart.datasets[0].data.length > 0 ? (
         <Line data={chart} />
       ) : (
-        <p>Loading chart...</p>
+        <p>No daily inputs yet!</p>
       )}
     </div>
   );

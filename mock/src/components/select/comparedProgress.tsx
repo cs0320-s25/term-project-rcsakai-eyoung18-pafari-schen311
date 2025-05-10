@@ -53,56 +53,17 @@ export function ComparedProgress() {
     },
   };
 
-  // Extract data for current nutrient
-  function updateChartData(nutrientKey: string) {
-    const avg = allAverages[nutrientKey] ?? 0;
-    const rec = allRecommended[nutrientKey] ?? 0;
-
-    setChartData({
-      labels: [nutrientKey],
-      datasets: [
-        {
-          label: "Average Intake",
-          data: [avg],
-          backgroundColor: "lightblue",
-          borderColor: "blue",
-          hoverBackgroundColor: "darkblue",
-          borderWidth: 1,
-        },
-        {
-          label: "Recommended",
-          data: [rec],
-          backgroundColor: "rgba(255, 99, 132, 0.3)",
-          borderColor: "red",
-          borderWidth: 2,
-          type: "bar",
-        },
-      ],
-    });
-  }
-
   useEffect(() => {
     if (!user?.id) return;
 
-    async function fetchDataAndBuildChart() {
-      const uid = user?.id;
-      let averages: Record<string, number> = {};
-      let recommendedMap: Record<string, number> = {
-        Calories: 2000,
-        Sugar: 15,
-        Carbs: 40,
-        Protein: 30,
-      };
-
+    async function fetchAverageIntake() {
       try {
         const intakeRes = await fetch(
-          `http://localhost:3232/get-daily?uid=${uid}`
+          `http://localhost:3232/get-daily?uid=${user?.id}`
         );
         const intakeData = await intakeRes.json();
 
-        if (intakeData.response_type !== "success") {
-          throw new Error("Invalid intake data response");
-        }
+        if (intakeData.response_type !== "success") return;
 
         const logs = intakeData.data;
         const nutrientTotals: Record<string, number> = {
@@ -123,58 +84,120 @@ export function ComparedProgress() {
           count += 1;
         }
 
+        const averages: Record<string, number> = {};
         for (const key of Object.keys(nutrientTotals)) {
           averages[key] = count > 0 ? nutrientTotals[key] / count : 0;
         }
 
-        const profile_uid = "profile-" + uid;
-        const recRes = await fetch(
-          `http://localhost:3232/get-calories?uid=${profile_uid}`
-        );
-        const recData = await recRes.json();
-        if (recData.response_type === "success" && recData.calories) {
-          recommendedMap["Calories"] = Math.round(recData.calories);
-        }
-
         setAllAverages(averages);
-        setAllRecommended(recommendedMap);
-        updateChartData(nutrient);
       } catch (e) {
-        console.error("Error building chart:", e);
+        console.error("Failed to fetch average intake:", e);
       }
     }
 
-    fetchDataAndBuildChart();
-  }, [user]);
+    async function fetchRecommended() {
+      try {
+        const recRes = await fetch(
+          `http://localhost:3232/get-calories?uid=profile-${user?.id}`
+        );
+        const recData = await recRes.json();
+
+        const recommendedMap: Record<string, number> = {
+          Calories: 2000,
+          Sugar: 15,
+          Carbs: 40,
+          Protein: 30,
+        };
+
+        const recommended: Record<string, number> = {};
+
+        if (recData.response_type === "success" && recData.calories) {
+          recommended["Calories"] = Math.round(recData.calories);
+        }
+
+        setAllRecommended(recommended);
+      } catch (e) {
+        console.error("Failed to fetch recommended intake:", e);
+      }
+    }
+
+    fetchAverageIntake();
+    fetchRecommended();
+  }, [user?.id]);
 
   useEffect(() => {
     updateChartData(nutrient);
   }, [nutrient, allAverages, allRecommended]);
 
-  if (!chartData) return <div>Loading...</div>;
+  function updateChartData(nutrientKey: string) {
+    const avg = allAverages[nutrientKey];
+    const rec = allRecommended[nutrientKey];
+
+    const datasets = [];
+
+    if (avg != null) {
+      datasets.push({
+        label: "Average Intake",
+        data: [avg],
+        backgroundColor: "lightblue",
+        borderColor: "blue",
+        hoverBackgroundColor: "darkblue",
+        borderWidth: 2,
+      });
+    }
+
+    if (rec != null) {
+      datasets.push({
+        label: "Recommended",
+        data: [rec],
+        backgroundColor: "lightcoral",
+        borderColor: "red",
+        hoverBackgroundColor: "darkred",
+        borderWidth: 2,
+      });
+    }
+
+    setChartData({
+      labels: [nutrientKey],
+      datasets,
+    });
+  }
+
+  useEffect(() => {
+    updateChartData(nutrient);
+  }, [nutrient, allAverages, allRecommended]);
+
+  const avg = allAverages[nutrient];
+  const rec = allRecommended[nutrient];
+  const showNoData = avg == null && rec == null;
 
   return (
     <div className="progress-container">
-      <label
-        htmlFor="nutrient-select"
-        style={{ marginBottom: "8px", display: "block" }}
-      >
-        Select Nutrient:
-      </label>
-      <select
-        id="nutrient-select"
-        value={nutrient}
-        onChange={(e) => setNutrient(e.target.value)}
-        style={{ marginBottom: "20px" }}
-      >
-        {nutrients.map((nutrient) => (
-          <option key={nutrient} value={nutrient}>
-            {nutrient.charAt(0) + nutrient.slice(1)}
-          </option>
-        ))}
-      </select>
-
-      <Bar data={chartData} options={options} />
+      <div className="dropdown-container" style={{ marginBottom: "1rem" }}>
+        <label
+          htmlFor="nutrient-select"
+          style={{ marginBottom: "8px", display: "block" }}
+        >
+          Select Nutrient:
+        </label>
+        <select
+          id="nutrient-select"
+          value={nutrient}
+          onChange={(e) => setNutrient(e.target.value)}
+          style={{ marginBottom: "20px" }}
+        >
+          {nutrients.map((nutrient) => (
+            <option key={nutrient} value={nutrient}>
+              {nutrient}
+            </option>
+          ))}
+        </select>
+      </div>
+      {showNoData ? (
+        <p>No daily inputs yet!</p>
+      ) : (
+        <Bar data={chartData!} options={options} />
+      )}
     </div>
   );
 }

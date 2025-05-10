@@ -93,10 +93,12 @@ public class CalculateCaloriesHandler implements Route {
 
   private CalorieEquationEntry findEquation(String sex, String ageGroup, String activityLevel) {
     for (CalorieEquationEntry entry : this.equationTable) {
-      if (entry.sex().equalsIgnoreCase(sex)
-          && entry.ageGroup().equalsIgnoreCase(ageGroup)
-          && entry.activityLevel().equalsIgnoreCase(activityLevel)) {
-        return entry;
+      if (entry.sex().equalsIgnoreCase(sex) && entry.ageGroup().equalsIgnoreCase(ageGroup)) {
+        if ("0–2 years".equalsIgnoreCase(ageGroup)) {
+            return entry;
+        } else if (entry.activityLevel().equalsIgnoreCase(activityLevel)) {
+            return entry;
+        }
       }
     }
     return null;
