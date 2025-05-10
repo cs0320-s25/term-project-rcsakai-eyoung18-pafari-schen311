@@ -12,6 +12,7 @@ import {
 } from "chart.js";
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/clerk-react";
+import { useDailyData } from "./fetchDaily";
 
 ChartJS.register(
   LineElement,

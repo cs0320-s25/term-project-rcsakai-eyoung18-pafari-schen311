@@ -4,9 +4,12 @@ import java.io.IOException;
 
 import edu.brown.cs.student.main.server.handlers.AddDailyNutrientsHandler;
 import edu.brown.cs.student.main.server.handlers.AddUserProfileHandler;
+import edu.brown.cs.student.main.server.handlers.CalculateCaloriesHandler;
 import edu.brown.cs.student.main.server.handlers.ClearUserHandler;
 import edu.brown.cs.student.main.server.handlers.GetDailyNutrientsHandler;
 import edu.brown.cs.student.main.server.handlers.GetUserProfileHandler;
+import edu.brown.cs.student.main.server.handlers.CalculateCaloriesHandler;
+import edu.brown.cs.student.main.server.handlers.LoadCSVHandler;
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
 import edu.brown.cs.student.main.server.storage.StorageInterface;
 import spark.Filter;
@@ -36,6 +39,8 @@ public class Server {
       Spark.get("get-user-profile", new GetUserProfileHandler(firebaseUtils));
       Spark.get("add-daily", new AddDailyNutrientsHandler(firebaseUtils));
       Spark.get("get-daily", new GetDailyNutrientsHandler(firebaseUtils));
+      Spark.get("get-calories", new CalculateCaloriesHandler(firebaseUtils));
+      Spark.get("load-csv", new LoadCSVHandler());
 
       Spark.notFound(
           (request, response) -> {

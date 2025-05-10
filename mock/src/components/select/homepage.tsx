@@ -3,9 +3,10 @@ import { mock } from "node:test";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import "../../styles/main.css";
 import { ControlledSelect } from "./controlledSelect";
-import { mock_set } from "./progress";
+//import { mock_set } from "./progress";
 import { Frown, Meh, Smile } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
+import { useDailyData } from "./fetchDaily";
 
 interface InputProps {
   currentMacro: string;
@@ -28,16 +29,26 @@ export function HomePage(props: InputProps) {
   const mockSugarOptions = ["5", "10", "15", "20"];
   const mockProteinOptions = ["20", "30", "40", "50"];
 
-  function handleSelect(inputMacro: string) {
-    if (!mock_set.headers.includes(inputMacro)) return;
-    props.setCurrentMacro(inputMacro);
-  }
+  // function handleSelect(inputMacro: string) {
+  //   if (!mock_set.headers.includes(inputMacro)) return;
+  //   props.setCurrentMacro(inputMacro);
+  // }
 
   function handleSubmit(values: Record<string, string>, date: string) {
     const uid = user?.id;
 
     if (!uid) {
       console.error("User is not authenticated.");
+      return;
+    }
+
+    const selectedDate = new Date(date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (selectedDate > today) {
+      console.error("Date cannot be in the future.");
+      alert("Please select a date that is not in the future.");
       return;
     }
 
@@ -60,8 +71,28 @@ export function HomePage(props: InputProps) {
         }
       });
   }
+  const { dailyData, loading } = useDailyData();
 
-  const currentStreak: number = 20;
+  function computeStreak(data: Record<string, any>): number {
+    const enteredDates = new Set(Object.keys(data));
+    let streak = 0;
+
+    let currentDate = new Date();
+
+    while (true) {
+      const dateStr = currentDate.toISOString().split("T")[0];
+      if (enteredDates.has(dateStr)) {
+        streak += 1;
+        currentDate.setDate(currentDate.getDate() - 1);
+      } else {
+        break;
+      }
+    }
+
+    return streak;
+  }
+
+  const currentStreak = computeStreak(dailyData);
 
   function happySadFace(currentStreak: number): JSX.Element | null {
     if (currentStreak == 0) {

@@ -54,6 +54,12 @@
       <version>2.9.3</version>
     </dependency>
 
+    <dependency>
+      <groupId>net.objecthunter</groupId>
+      <artifactId>exp4j</artifactId>
+      <version>0.4.8</version>
+    </dependency>
+
     <!--
            TestNG builds useful functionality on top of JUnit, such as method annotations.
     -->
