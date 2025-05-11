@@ -171,4 +171,18 @@ export function HomePage(props: InputProps) {
                 Calories: calorieString,
                 Carbohydrates: carbString,
                 Sugars: sugarString,
-                Prote
+                Protein: proteinString,
+              },
+              date
+            )
+          }
+        >
+          Save Information
+        </button>
+        <div className="icon">
+          {happySadFace(currentStreak)} Current Day Streak: {currentStreak}
+        </div>
+      </div>
+    </div>
+  );
+}
