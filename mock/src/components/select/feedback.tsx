@@ -37,19 +37,15 @@ export function Feedback() {
   console.log(feedback)
   return (
     <div className="feedback-container">
-      <h2 className="text-xl font-semibold mb-4">
-        Nutritional Feedback</h2>
-        <ul>
-        {feedback.map(({ header, avg, recommended, score, description }) => (
-          <li key={header} className="bg-white rounded p-3 shadow">
-            <p className="font-medium">{header}</p>
-            <p>Average Intake: {avg.toFixed(2)}</p>
-            <p>Recommended: {recommended}</p>
-            <p>Score: {score}/100</p>
-            <p className="italic text-sm">{description}</p>
-          </li>
-        ))}
-      </ul>
+        <ul className="feedback-list"> {feedback.map((item) => (
+          <li key={item.header} className="input-box-calorie feedback-card">
+            <p>{item.header}</p>
+            <p>Average Intake: {item.avg.toFixed(2)}</p>
+            <p>Recommended: {item.recommended}</p>
+            <p>Score: {item.score}/100</p>
+            <p>{item.description}</p>
+          </li> ))}
+        </ul>
     </div>
   );
 }

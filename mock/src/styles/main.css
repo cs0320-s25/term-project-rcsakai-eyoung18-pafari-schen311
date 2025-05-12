@@ -184,7 +184,30 @@
 .feedback-container {
   margin: 2rem auto;
   max-width: 1000px;
-  position: relative;
-  left: 33%;
-  top: -320px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  position: absolute;
+  left: 18%;
+  top: 30px;
+
+  /* ↓ Add this ↓ */
+  padding-top: 40px;     /* pull it upward slightly */
+  transform: translateY(-80px); /* adjust this value to align exactly */
+}
+
+.feedback-card {
+  position: static;  /* override absolute positioning */
+  flex: 1 1 220px;
+  margin: 10px;
+}
+.feedback-list {
+  display: flex;
+  flex-wrap: wrap;          /* allow wrapping to new lines */
+  justify-content: center;  /* center the row */
+  gap: 2rem;                /* spacing between cards */
+  padding: 0;               /* remove default ul padding */
+  margin: 0 auto;
+  list-style: none;         /* REMOVE bullet points */
 }
