@@ -92,7 +92,7 @@ export function ComparedProgress() {
       }
       count += 1;
     }
-    console.log(totals)
+
     const averages: Record<string, number> = {};
     for (const nutrient of nutrients) {
       averages[nutrient] = count > 0 ? totals[nutrient] / count : 0;
