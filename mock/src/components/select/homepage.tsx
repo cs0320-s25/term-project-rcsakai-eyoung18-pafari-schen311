@@ -55,10 +55,10 @@ export function HomePage(props: InputProps) {
     const params = new URLSearchParams({
       uid: uid,
       date: date,
-      calories: values.Calories || "no input",
-      sugar: values.Sugars || "no input",
-      carbs: values.Carbohydrates || "no input",
-      protein: values.Protein || "no input",
+      calories: values.calories || "no input",
+      sugar: values.sugar || "no input",
+      carbs: values.carbs || "no input",
+      protein: values.protein || "no input",
     });
 
     fetch(`http://localhost:3232/add-daily?${params.toString()}`)
@@ -66,13 +66,14 @@ export function HomePage(props: InputProps) {
       .then((data) => {
         if (data.response_type === "success") {
           console.log("Daily log added successfully.");
+          console.log(data)
         } else {
           console.error("Failed to add daily log:", data.error);
         }
       });
   }
   const { dailyData, loading } = useDailyData();
-
+  console.log(dailyData.key)
   function computeStreak(data: Record<string, any>): number {
     const enteredDates = new Set(Object.keys(data));
     let streak = 0;
@@ -168,10 +169,10 @@ export function HomePage(props: InputProps) {
           onClick={() =>
             handleSubmit(
               {
-                Calories: calorieString,
-                Carbohydrates: carbString,
-                Sugars: sugarString,
-                Protein: proteinString,
+                calories: calorieString,
+                carbs: carbString,
+                sugar: sugarString,
+                protein: proteinString,
               },
               date
             )

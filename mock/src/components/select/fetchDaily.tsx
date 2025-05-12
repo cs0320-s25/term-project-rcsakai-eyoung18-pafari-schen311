@@ -3,10 +3,11 @@ import { useUser } from "@clerk/clerk-react";
 
 export interface DailyEntry {
   date: string;
-  calories: string;
-  sugar: string;
-  carbs: string;
-  protein: string;
+  "user-id": string;
+  Calories: string;
+  Sugar: string;
+  Carbs: string;
+  Protein: string;
 }
 
 export function useDailyData() {

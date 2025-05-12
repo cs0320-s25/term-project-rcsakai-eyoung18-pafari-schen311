@@ -46,6 +46,7 @@ public class AddDailyNutrientsHandler implements Route {
       storageHandler.addDaily("profiles", docId, "daily_logs", date, dailyNutrients);
 
       responseMap.put("response_type", "success");
+      responseMap.put("savedData", dailyNutrients);
     } catch (Exception e) {
       e.printStackTrace();
       responseMap.put("response_type", "failure");

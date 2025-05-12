@@ -12,6 +12,7 @@ import {
 } from "chart.js";
 import { useEffect, useRef, useState } from "react";
 import { ControlledSelect } from "./controlledSelect";
+import { DailyEntry, useDailyData } from "./fetchDaily";
 
 ChartJS.register(
   LineElement,
@@ -27,6 +28,7 @@ export interface tableLayout {
   data: Array<Record<string, number[]>>;
 }
 
+
 export const mock_set: tableLayout = {
   headers: ["Calories", "Sugar", "Carbs", "Protein"],
   data: [
@@ -41,6 +43,7 @@ export function Progress() {
   const [nutrientString, setNutrient] = useState<string>("Calories");
   const [selectedNutrient, setSelectedNutrient] = useState("Calories");
 
+  const { dailyData, loading } = useDailyData();
   const [labels, setLabels] = useState<string[]>([]);
   const [chartData, setChartData] = useState<Record<string, number[]>>({
     Calories: [],
@@ -49,6 +52,15 @@ export function Progress() {
     Protein: [],
   });
 
+  const nutrientOptions = ["Calories", "Sugar", "Carbs", "Protein"];
+
+  const labelToKey: Record<string, keyof DailyEntry> = {
+    Calories: "Calories",
+    Sugar: "Sugar",
+    Carbs: "Carbs",
+    Protein: "Protein",
+  };
+  
   const nutrientColors: Record<string, string> = {
     Calories: "red",
     Sugar: "orange",
@@ -58,12 +70,12 @@ export function Progress() {
 
   // Sync dropdown selection to chart
   useEffect(() => {
-    if (mock_set.headers.includes(nutrientString)) {
+    if (nutrientOptions.includes(nutrientString)) {
       setSelectedNutrient(nutrientString);
     }
   }, [nutrientString]);
 
-  // Populate from mock_set
+  // Populate from dailyData
   useEffect(() => {
     const nutrients: Record<string, number[]> = {
       Calories: [],
@@ -72,19 +84,25 @@ export function Progress() {
       Protein: [],
     };
 
+    const sortedDates = Object.keys(dailyData).sort();
     const dates: string[] = [];
 
-    for (const entry of mock_set.data) {
-      const [date, values] = Object.entries(entry)[0];
+    for (const date of sortedDates) {
+      const entry = dailyData[date];
       dates.push(date);
-      for (let i = 0; i < mock_set.headers.length; i++) {
-        nutrients[mock_set.headers[i]].push(values[i]);
+
+      for (const label of nutrientOptions) {
+        const key = labelToKey[label];
+        const value = entry[key];
+        nutrients[label].push(value ? parseFloat(value) : 0);
       }
     }
 
     setLabels(dates);
     setChartData(nutrients);
-  }, []);
+    }, [dailyData, loading]);
+
+    console.log(dailyData)
 
   const chart: ChartData<"line"> = {
     labels,
@@ -106,7 +124,7 @@ export function Progress() {
           value={nutrientString}
           setValue={setNutrient}
           ariaLabel="nutrient select"
-          options={mock_set.headers}
+          options={nutrientOptions}
           ref={searchRef}
         />
       </div>

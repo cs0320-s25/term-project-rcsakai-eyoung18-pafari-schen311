@@ -13,11 +13,13 @@ import {
 import { Bar } from "react-chartjs-2";
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/clerk-react";
+import { DailyEntry, useDailyData } from "./fetchDaily";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 export function ComparedProgress() {
   const { user } = useUser();
+  const { dailyData, loading } = useDailyData();
 
   const [nutrient, setNutrient] = useState("Calories");
   const [allAverages, setAllAverages] = useState<Record<string, number>>({});
@@ -27,6 +29,20 @@ export function ComparedProgress() {
   const [chartData, setChartData] = useState<ChartData<"bar"> | null>(null);
 
   const nutrients = ["Calories", "Sugar", "Carbs", "Protein"];
+
+  const labelToKey: Record<string, keyof DailyEntry> = {
+    Calories: "Calories",
+    Sugar: "Sugar",
+    Carbs: "Carbs",
+    Protein: "Protein",
+  };
+
+  const recommendedMap: Record<string, number> = {
+    Calories: 2000,
+    Sugar: 15,
+    Carbs: 40,
+    Protein: 30,
+  };
 
   const legendSymbols = ["■", "●", "▲"];
 
@@ -54,76 +70,61 @@ export function ComparedProgress() {
   };
 
   useEffect(() => {
-    if (!user?.id) return;
+    if (loading) return;
 
-    async function fetchAverageIntake() {
-      try {
-        const intakeRes = await fetch(
-          `http://localhost:3232/get-daily?uid=${user?.id}`
-        );
-        const intakeData = await intakeRes.json();
+    const totals: Record<string, number> = {
+      Calories: 0,
+      Sugar: 0,
+      Carbs: 0,
+      Protein: 0,
+    };
 
-        if (intakeData.response_type !== "success") return;
+    let count = 0;
 
-        const logs = intakeData.data;
-        const nutrientTotals: Record<string, number> = {
-          Calories: 0,
-          Sugar: 0,
-          Carbs: 0,
-          Protein: 0,
-        };
-
-        let count = 0;
-        for (const date in logs) {
-          const day = logs[date];
-          for (const key of Object.keys(nutrientTotals)) {
-            if (day[key] != null) {
-              nutrientTotals[key] += Number(day[key]);
-            }
-          }
-          count += 1;
+    for (const date in dailyData) {
+      const entry = dailyData[date];
+      for (const label of nutrients) {
+        const key = labelToKey[label];          
+        const value = entry[key];
+        if (value !== undefined && !isNaN(Number(value))) {
+          totals[label] += Number(value);        
         }
-
-        const averages: Record<string, number> = {};
-        for (const key of Object.keys(nutrientTotals)) {
-          averages[key] = count > 0 ? nutrientTotals[key] / count : 0;
-        }
-
-        setAllAverages(averages);
-      } catch (e) {
-        console.error("Failed to fetch average intake:", e);
       }
+      count += 1;
+    }
+    console.log(totals)
+    const averages: Record<string, number> = {};
+    for (const nutrient of nutrients) {
+      averages[nutrient] = count > 0 ? totals[nutrient] / count : 0;
     }
 
-    async function fetchRecommended() {
-      try {
-        const recRes = await fetch(
-          `http://localhost:3232/get-calories?uid=profile-${user?.id}`
-        );
-        const recData = await recRes.json();
+    setAllAverages(averages);
+    setAllRecommended((prev) => ({ ...recommendedMap, ...prev }));
+  }, [dailyData, loading]);
 
-        const recommendedMap: Record<string, number> = {
-          Calories: 2000,
-          Sugar: 15,
-          Carbs: 40,
-          Protein: 30,
-        };
-
-        const recommended: Record<string, number> = {};
-
-        if (recData.response_type === "success" && recData.calories) {
-          recommended["Calories"] = Math.round(recData.calories);
-        }
-
-        setAllRecommended(recommended);
-      } catch (e) {
-        console.error("Failed to fetch recommended intake:", e);
-      }
-    }
-
-    fetchAverageIntake();
+  useEffect(() => {
     fetchRecommended();
   }, [user?.id]);
+
+  async function fetchRecommended() {
+    try {
+      const recRes = await fetch(
+        `http://localhost:3232/get-calories?uid=profile-${user?.id}`
+      );
+      const recData = await recRes.json();
+
+      const recommended = { ...recommendedMap };
+
+      if (recData.response_type === "success" && recData.calories) {
+        recommended["Calories"] = Math.round(recData.calories);
+      }
+
+      setAllRecommended(recommended);
+    } catch (e) {
+      console.error("Failed to fetch recommended intake:", e);
+      setAllRecommended(recommendedMap); // fallback
+    }
+  }
 
   useEffect(() => {
     updateChartData(nutrient);
@@ -162,10 +163,6 @@ export function ComparedProgress() {
       datasets,
     });
   }
-
-  useEffect(() => {
-    updateChartData(nutrient);
-  }, [nutrient, allAverages, allRecommended]);
 
   const avg = allAverages[nutrient];
   const rec = allRecommended[nutrient];
