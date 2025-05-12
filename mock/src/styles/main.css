@@ -40,9 +40,52 @@
   margin-top: 20px;
 }
 
-.input-box {
+.input-box-calorie {
+  border: 2px solid rgb(153, 153, 153);
+  left: -15%;
+  top: 120%;
+  position: absolute;
+  border-radius: 12px;
+  padding: 20px;
+  min-width: 150px;
+  text-align: center;
+  background-color: white;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  color:rgb(0, 0, 0);
+}
+
+.input-box-protein {
+  border: 2px solid rgb(153, 153, 153);
+  left: -15%;
+  top: 200%;
+  position: absolute;
+  border-radius: 12px;
+  padding: 20px;
+  min-width: 150px;
+  text-align: center;
+  background-color: white;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  color:rgb(0, 0, 0);
+}
+.input-box-carbo {
   border: 2px solid rgb(153, 153, 153);
   border-radius: 12px;
+  left: 45%;
+  top: 200%;
+  position: absolute;
+  padding: 20px;
+  min-width: 150px;
+  text-align: center;
+  background-color: white;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  color:rgb(0, 0, 0);
+}
+.input-box-sugar {
+  border: 2px solid rgb(153, 153, 153);
+  border-radius: 12px;
+  left: 45%;
+  top: 120%;
+  position: absolute;
   padding: 20px;
   min-width: 150px;
   text-align: center;
@@ -127,6 +170,21 @@
 
 .icon {
   position: absolute;
-  left: 40%;
-  top: 120%;
+  left: 20%;
+  top: 280%;
+}
+
+.saveinfo {
+  border-radius: 12px;
+  position: absolute;
+  left: 80%;
+  top: 130px
+}
+
+.feedback-container {
+  margin: 2rem auto;
+  max-width: 1000px;
+  position: relative;
+  left: 33%;
+  top: -320px;
 }

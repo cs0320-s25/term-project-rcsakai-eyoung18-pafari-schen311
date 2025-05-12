@@ -10,9 +10,8 @@ import {
   Tooltip,
   ChartData,
 } from "chart.js";
-import { useEffect, useState } from "react";
-import { useUser } from "@clerk/clerk-react";
-import { useDailyData } from "./fetchDaily";
+import { useEffect, useRef, useState } from "react";
+import { ControlledSelect } from "./controlledSelect";
 
 ChartJS.register(
   LineElement,
@@ -38,11 +37,17 @@ export const mock_set: tableLayout = {
 };
 
 export function Progress() {
-  const [chartData, setChartData] = useState<Record<string, number[]>>({});
-  const { user } = useUser();
+  const searchRef = useRef<HTMLSelectElement | null>(null);
+  const [nutrientString, setNutrient] = useState<string>("Calories");
+  const [selectedNutrient, setSelectedNutrient] = useState("Calories");
 
   const [labels, setLabels] = useState<string[]>([]);
-  const [selectedNutrient, setSelectedNutrient] = useState("Calories");
+  const [chartData, setChartData] = useState<Record<string, number[]>>({
+    Calories: [],
+    Sugar: [],
+    Carbs: [],
+    Protein: [],
+  });
 
   const nutrientColors: Record<string, string> = {
     Calories: "red",
@@ -51,39 +56,35 @@ export function Progress() {
     Protein: "green",
   };
 
+  // Sync dropdown selection to chart
   useEffect(() => {
-    async function fetchData() {
-      if (!user?.id) return;
-      const res = await fetch(`http://localhost:3232/get-daily?uid=${user.id}`);
-      const json = await res.json();
-      if (json.response_type !== "success") {
-        console.error("Failed to fetch daily data:", json.error);
-        return;
+    if (mock_set.headers.includes(nutrientString)) {
+      setSelectedNutrient(nutrientString);
+    }
+  }, [nutrientString]);
+
+  // Populate from mock_set
+  useEffect(() => {
+    const nutrients: Record<string, number[]> = {
+      Calories: [],
+      Sugar: [],
+      Carbs: [],
+      Protein: [],
+    };
+
+    const dates: string[] = [];
+
+    for (const entry of mock_set.data) {
+      const [date, values] = Object.entries(entry)[0];
+      dates.push(date);
+      for (let i = 0; i < mock_set.headers.length; i++) {
+        nutrients[mock_set.headers[i]].push(values[i]);
       }
-      const data = json.data;
-
-      const dates = Object.keys(data).sort();
-      const nutrients = {
-        Calories: [] as number[],
-        Sugar: [] as number[],
-        Carbs: [] as number[],
-        Protein: [] as number[],
-      };
-
-      for (const date of dates) {
-        const entry = data[date];
-        nutrients.Calories.push(Number(entry.Calories));
-        nutrients.Sugar.push(Number(entry.Sugar));
-        nutrients.Carbs.push(Number(entry.Carbs));
-        nutrients.Protein.push(Number(entry.Protein));
-      }
-
-      setLabels(dates);
-      setChartData(nutrients);
     }
 
-    fetchData();
-  }, [user]);
+    setLabels(dates);
+    setChartData(nutrients);
+  }, []);
 
   const chart: ChartData<"line"> = {
     labels,
@@ -101,22 +102,18 @@ export function Progress() {
     <div className="progress-container">
       <div className="dropdown-container" style={{ marginBottom: "1rem" }}>
         <label htmlFor="nutrient-select">Select Nutrient: </label>
-        <select
-          id="nutrient-select"
-          value={selectedNutrient}
-          onChange={(e) => setSelectedNutrient(e.target.value)}
-        >
-          {Object.keys(chartData).map((nutrient) => (
-            <option key={nutrient} value={nutrient}>
-              {nutrient}
-            </option>
-          ))}
-        </select>
+        <ControlledSelect
+          value={nutrientString}
+          setValue={setNutrient}
+          ariaLabel="nutrient select"
+          options={mock_set.headers}
+          ref={searchRef}
+        />
       </div>
       {chart && chart.datasets[0].data.length > 0 ? (
         <Line data={chart} />
       ) : (
-        <p>No daily inputs yet!</p>
+        <p>No mock data available!</p>
       )}
     </div>
   );

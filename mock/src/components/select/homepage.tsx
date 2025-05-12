@@ -123,7 +123,7 @@ export function HomePage(props: InputProps) {
             onChange={(e) => setDate(e.target.value)}
           />
         </div>
-        <div className="input-box">
+        <div className="input-box-calorie">
           <p>Calories</p>
           <ControlledSelect
             value={calorieString}
@@ -133,7 +133,7 @@ export function HomePage(props: InputProps) {
             ref={searchRef}
           />
         </div>
-        <div className="input-box">
+        <div className="input-box-carbo">
           <p>Carbohydrates</p>
           <ControlledSelect
             value={carbString}
@@ -143,7 +143,7 @@ export function HomePage(props: InputProps) {
             ref={searchRef}
           />
         </div>
-        <div className="input-box">
+        <div className="input-box-sugar">
           <p>Sugars</p>
           <ControlledSelect
             value={sugarString}
@@ -153,7 +153,7 @@ export function HomePage(props: InputProps) {
             ref={searchRef}
           />
         </div>
-        <div className="input-box">
+        <div className="input-box-protein">
           <p>Protein</p>
           <ControlledSelect
             value={proteinString}
@@ -176,6 +176,7 @@ export function HomePage(props: InputProps) {
               date
             )
           }
+          className="saveinfo"
         >
           Save Information
         </button>

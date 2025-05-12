@@ -34,11 +34,12 @@ export function Feedback() {
 
     return { header, avg, recommended, score, description };
   });
-
+  console.log(feedback)
   return (
-    <div className="feedback-container p-4">
-      <h2 className="text-xl font-semibold mb-4">Nutritional Feedback</h2>
-      <ul className="space-y-3">
+    <div className="feedback-container">
+      <h2 className="text-xl font-semibold mb-4">
+        Nutritional Feedback</h2>
+        <ul>
         {feedback.map(({ header, avg, recommended, score, description }) => (
           <li key={header} className="bg-white rounded p-3 shadow">
             <p className="font-medium">{header}</p>
