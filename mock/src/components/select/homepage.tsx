@@ -22,47 +22,47 @@ export function HomePage(props: InputProps) {
 
   function handleSubmit(values: Record<string, string>, date: string) {
     const uid = user?.id;
-  
+
     if (!uid) {
       console.error("User is not authenticated.");
       return;
     }
-  
+
     const selectedDate = new Date(date);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-  
+
     if (selectedDate > today) {
       console.error("Date cannot be in the future.");
       alert("Please select a date that is not in the future.");
       return;
     }
-  
+
     const params = new URLSearchParams({
       uid: uid,
       date: date,
-      Calories: values.calories || "no input",
-      Sugar: values.sugar || "no input",
-      Carbs: values.carbs || "no input",
-      Protein: values.protein || "no input",
+      calories: values.calories || "no input",
+      sugar: values.sugar || "no input",
+      carbs: values.carbs || "no input",
+      protein: values.protein || "no input",
     });
-  
+
     fetch(`http://localhost:3232/add-daily?${params.toString()}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.response_type === "success") {
-          console.log("Daily log added successfully.");      
+          console.log("Daily log added successfully.");
         } else {
           console.error("Failed to add daily log:", data.error);
         }
       });
-      setCalorie("");
-      setCarb("");
-      setDate("");
-      setSugar("");
-      setProtein("");
+    setCalorie("");
+    setCarb("");
+    setDate("");
+    setSugar("");
+    setProtein("");
   }
-  
+
   const { dailyData, loading } = useDailyData();
   function computeStreak(data: Record<string, any>): number {
     const enteredDates = new Set(Object.keys(data));
@@ -84,7 +84,7 @@ export function HomePage(props: InputProps) {
   }
 
   const currentStreak = computeStreak(dailyData);
-  console.log(dailyData)
+  console.log(dailyData);
   function happySadFace(currentStreak: number): JSX.Element | null {
     if (currentStreak == 0) {
       return <Frown size={50} />;
