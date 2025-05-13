@@ -1,17 +1,15 @@
 package edu.brown.cs.student.main.server.handlers;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.cloud.FirestoreClient;
-
 import edu.brown.cs.student.main.server.storage.StorageInterface;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 import spark.Request;
 import spark.Response;
 import spark.Route;

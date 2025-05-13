@@ -1,13 +1,11 @@
 package edu.brown.cs.student.main.server.handlers;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.List;
-
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
-
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.List;
 import spark.Request;
 import spark.Response;
 import spark.Route;

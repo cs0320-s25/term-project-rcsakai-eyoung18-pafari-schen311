@@ -1,6 +1,6 @@
 package edu.brown.cs.student.main.server;
 
-import java.io.IOException;
+import static spark.Spark.after;
 
 import edu.brown.cs.student.main.server.handlers.AddDailyNutrientsHandler;
 import edu.brown.cs.student.main.server.handlers.AddUserProfileHandler;
@@ -8,13 +8,13 @@ import edu.brown.cs.student.main.server.handlers.CalculateCaloriesHandler;
 import edu.brown.cs.student.main.server.handlers.ClearUserHandler;
 import edu.brown.cs.student.main.server.handlers.GetDailyNutrientsHandler;
 import edu.brown.cs.student.main.server.handlers.GetUserProfileHandler;
-import edu.brown.cs.student.main.server.handlers.CalculateCaloriesHandler;
 import edu.brown.cs.student.main.server.handlers.LoadCSVHandler;
+import edu.brown.cs.student.main.server.handlers.SearchDailyHandler;
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
 import edu.brown.cs.student.main.server.storage.StorageInterface;
+import java.io.IOException;
 import spark.Filter;
 import spark.Spark;
-import static spark.Spark.after;
 
 /** Top Level class for our project, utilizes spark to create and maintain our server. */
 public class Server {
@@ -40,6 +40,7 @@ public class Server {
       Spark.get("add-daily", new AddDailyNutrientsHandler(firebaseUtils));
       Spark.get("get-daily", new GetDailyNutrientsHandler(firebaseUtils));
       Spark.get("get-calories", new CalculateCaloriesHandler(firebaseUtils));
+      Spark.get("search-daily", new SearchDailyHandler(firebaseUtils));
       Spark.get("load-csv", new LoadCSVHandler());
 
       Spark.notFound(

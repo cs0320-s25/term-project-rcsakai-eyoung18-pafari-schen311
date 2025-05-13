@@ -1,15 +1,13 @@
 package edu.brown.cs.student.main.server.handlers;
 
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.Firestore;
+import com.google.firebase.cloud.FirestoreClient;
+import edu.brown.cs.student.main.server.storage.StorageInterface;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.firebase.cloud.FirestoreClient;
-
-import edu.brown.cs.student.main.server.storage.StorageInterface;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -56,11 +54,15 @@ public class CalculateCaloriesHandler implements Route {
       Object ageGroupObj = userData.get("ageGroup");
       Object activityLevelObj = userData.get("activityLevel");
 
-      if (ageObj == null || heightObj == null || weightObj == null ||
-          sexObj == null || ageGroupObj == null || activityLevelObj == null) {
-      responseMap.put("response_type", "failure");
-      responseMap.put("error", "Missing required profile fields.");
-      return Utils.toMoshiJson(responseMap);
+      if (ageObj == null
+          || heightObj == null
+          || weightObj == null
+          || sexObj == null
+          || ageGroupObj == null
+          || activityLevelObj == null) {
+        responseMap.put("response_type", "failure");
+        responseMap.put("error", "Missing required profile fields.");
+        return Utils.toMoshiJson(responseMap);
       }
 
       double age = ((Number) ageObj).doubleValue();
@@ -95,9 +97,9 @@ public class CalculateCaloriesHandler implements Route {
     for (CalorieEquationEntry entry : this.equationTable) {
       if (entry.sex().equalsIgnoreCase(sex) && entry.ageGroup().equalsIgnoreCase(ageGroup)) {
         if ("0–2 years".equalsIgnoreCase(ageGroup)) {
-            return entry;
+          return entry;
         } else if (entry.activityLevel().equalsIgnoreCase(activityLevel)) {
-            return entry;
+          return entry;
         }
       }
     }
