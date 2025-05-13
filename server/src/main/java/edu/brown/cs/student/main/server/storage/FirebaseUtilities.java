@@ -1,14 +1,5 @@
 package edu.brown.cs.student.main.server.storage;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-
 import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.CollectionReference;
@@ -19,6 +10,14 @@ import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.cloud.FirestoreClient;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class FirebaseUtilities implements StorageInterface {
 
@@ -66,7 +65,12 @@ public class FirebaseUtilities implements StorageInterface {
     db.collection(collectionId).document(docId).set(data);
   }
 
-  public void addDaily(String collectionId, String docId, String subcollection, String date, Map<String, Object> data) {
+  public void addDaily(
+      String collectionId,
+      String docId,
+      String subcollection,
+      String date,
+      Map<String, Object> data) {
     Firestore db = FirestoreClient.getFirestore();
     db.collection(collectionId).document(docId).collection(subcollection).document(date).set(data);
   }
@@ -91,20 +95,20 @@ public class FirebaseUtilities implements StorageInterface {
   }
 
   private void deleteDocument(DocumentReference doc) throws Exception {
-  Iterable<CollectionReference> collections = doc.listCollections();
-  for (CollectionReference collection : collections) {
-    deleteCollection(collection);
+    Iterable<CollectionReference> collections = doc.listCollections();
+    for (CollectionReference collection : collections) {
+      deleteCollection(collection);
+    }
+
+    doc.delete().get();
   }
 
-  doc.delete().get();
-}
+  private void deleteCollection(CollectionReference collection) throws Exception {
+    ApiFuture<QuerySnapshot> future = collection.get();
+    List<QueryDocumentSnapshot> documents = future.get().getDocuments();
 
-private void deleteCollection(CollectionReference collection) throws Exception {
-  ApiFuture<QuerySnapshot> future = collection.get();
-  List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-
-  for (QueryDocumentSnapshot document : documents) {
-    deleteDocument(document.getReference());
+    for (QueryDocumentSnapshot document : documents) {
+      deleteDocument(document.getReference());
+    }
   }
-}
 }

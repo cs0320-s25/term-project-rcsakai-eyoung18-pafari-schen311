@@ -8,7 +8,8 @@ import java.util.List;
 
 public class CSVLoaderUtil {
 
-  public static List<CalorieEquationEntry> loadCalorieEquations(String filePath) throws IOException {
+  public static List<CalorieEquationEntry> loadCalorieEquations(String filePath)
+      throws IOException {
     List<CalorieEquationEntry> entries = new ArrayList<>();
     try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
       String line;

@@ -8,7 +8,12 @@ public interface StorageInterface {
 
   void addDocument(String uid, String docId, Map<String, Object> data);
 
-  void addDaily(String collectionId, String docId, String subcollection, String date, Map<String, Object> data);
+  void addDaily(
+      String collectionId,
+      String docId,
+      String subcollection,
+      String date,
+      Map<String, Object> data);
 
   List<Map<String, Object>> getCollection(String uid)
       throws InterruptedException, ExecutionException;

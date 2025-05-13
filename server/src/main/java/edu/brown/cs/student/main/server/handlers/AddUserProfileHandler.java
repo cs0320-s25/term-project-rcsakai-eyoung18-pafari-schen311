@@ -1,16 +1,12 @@
 package edu.brown.cs.student.main.server.handlers;
 
-import java.awt.color.ProfileDataException;
-
 import edu.brown.cs.student.main.server.storage.StorageInterface;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
-
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -37,7 +33,15 @@ public class AddUserProfileHandler implements Route {
       String heightUnit = request.queryParams("heightUnit");
       String weightUnit = request.queryParams("weightUnit");
 
-      if (uid == null || name == null || sex == null || birthday == null || height == null || weight == null || activityLevel == null || heightUnit == null || weightUnit == null) {
+      if (uid == null
+          || name == null
+          || sex == null
+          || birthday == null
+          || height == null
+          || weight == null
+          || activityLevel == null
+          || heightUnit == null
+          || weightUnit == null) {
         throw new IllegalArgumentException("Missing one or more required parameters.");
       }
 

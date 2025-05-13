@@ -1,10 +1,9 @@
 package edu.brown.cs.student.main.server.handlers;
 
+import edu.brown.cs.student.main.server.storage.StorageInterface;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-
-import edu.brown.cs.student.main.server.storage.StorageInterface;
 import spark.Request;
 import spark.Response;
 import spark.Route;
