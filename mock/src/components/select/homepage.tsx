@@ -157,8 +157,6 @@ export function HomePage(props: InputProps) {
             placeholder="Inquire"
           />
         </div>
-        <button onClick={() => handleSearch(search)} className="search-button">Search!
-        </button>
         <p></p>
         <button
           onClick={() =>
