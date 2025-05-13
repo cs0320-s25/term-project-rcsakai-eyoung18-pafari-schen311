@@ -1,13 +1,15 @@
 package edu.brown.cs.student.main.server.handlers;
 
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.firebase.cloud.FirestoreClient;
-import edu.brown.cs.student.main.server.storage.StorageInterface;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.Firestore;
+import com.google.firebase.cloud.FirestoreClient;
+
+import edu.brown.cs.student.main.server.storage.StorageInterface;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -81,9 +83,15 @@ public class CalculateCaloriesHandler implements Route {
 
       String rawEquation = entry.equation();
       double calories = evaluateEquation(rawEquation, age, height, weight);
+      double protein = Math.round(weight * 0.8 * 10.0) / 10.0;
+      double carbs = Math.round(calories * 0.55) / 4.0;
+      double sugar = (calories * 0.10) / 4.0;
 
       responseMap.put("response_type", "success");
       responseMap.put("calories", calories);
+      responseMap.put("protein", protein);
+      responseMap.put("carbs", carbs);
+      responseMap.put("sugar", sugar);
       responseMap.put("equation", rawEquation);
     } catch (Exception e) {
       responseMap.put("response_type", "failure");

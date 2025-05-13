@@ -84,10 +84,10 @@ export function ComparedProgress() {
     for (const date in dailyData) {
       const entry = dailyData[date];
       for (const label of nutrients) {
-        const key = labelToKey[label];          
+        const key = labelToKey[label];
         const value = entry[key];
         if (value !== undefined && !isNaN(Number(value))) {
-          totals[label] += Number(value);        
+          totals[label] += Number(value);
         }
       }
       count += 1;
@@ -117,6 +117,9 @@ export function ComparedProgress() {
 
       if (recData.response_type === "success" && recData.calories) {
         recommended["Calories"] = Math.round(recData.calories);
+        recommended["Sugar"] = recData.sugar;
+        recommended["Protein"] = recData.protein;
+        recommended["Carbs"] = recData.carbs;
       }
 
       setAllRecommended(recommended);
