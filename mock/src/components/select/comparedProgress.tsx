@@ -113,6 +113,9 @@ export function ComparedProgress() {
 
         if (recData.response_type === "success" && recData.calories) {
           recommended["Calories"] = Math.round(recData.calories);
+          recommended["Sugar"] = recData.sugar;
+          recommended["Protein"] = recData.protein;
+          recommended["Carbs"] = recData.carbs;
         }
 
         setAllRecommended(recommended);
