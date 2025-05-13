@@ -192,22 +192,32 @@
   left: 18%;
   top: 30px;
 
-  /* ↓ Add this ↓ */
-  padding-top: 40px;     /* pull it upward slightly */
-  transform: translateY(-80px); /* adjust this value to align exactly */
+  padding-top: 40px;   
+  transform: translateY(-80px);
 }
 
 .feedback-card {
-  position: static;  /* override absolute positioning */
+  position: static;  
   flex: 1 1 220px;
   margin: 10px;
 }
 .feedback-list {
   display: flex;
-  flex-wrap: wrap;          /* allow wrapping to new lines */
-  justify-content: center;  /* center the row */
-  gap: 2rem;                /* spacing between cards */
-  padding: 0;               /* remove default ul padding */
+  flex-wrap: wrap;          
+  justify-content: center;  
+  gap: 2rem;                
+  padding: 0;               
   margin: 0 auto;
-  list-style: none;         /* REMOVE bullet points */
+  list-style: none;         
+}
+
+.search-box {
+  position: absolute;
+  left: 130%;
+  top: 30%;
+}
+.search-button {
+  position: absolute;
+  left: 175%;
+  top: 70%;
 }

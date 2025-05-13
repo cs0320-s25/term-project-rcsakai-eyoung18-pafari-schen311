@@ -8,7 +8,6 @@ import edu.brown.cs.student.main.server.handlers.CalculateCaloriesHandler;
 import edu.brown.cs.student.main.server.handlers.ClearUserHandler;
 import edu.brown.cs.student.main.server.handlers.GetDailyNutrientsHandler;
 import edu.brown.cs.student.main.server.handlers.GetUserProfileHandler;
-import edu.brown.cs.student.main.server.handlers.CalculateCaloriesHandler;
 import edu.brown.cs.student.main.server.handlers.LoadCSVHandler;
 import edu.brown.cs.student.main.server.storage.FirebaseUtilities;
 import edu.brown.cs.student.main.server.storage.StorageInterface;

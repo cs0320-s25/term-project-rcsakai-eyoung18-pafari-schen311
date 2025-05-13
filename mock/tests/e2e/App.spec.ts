@@ -1,49 +1,52 @@
 import { expect, test } from "@playwright/test";
+import { clerk } from "@clerk/testing/playwright";
 
-/**
-  The general shapes of tests in Playwright Test are:
-    1. Navigate to a URL
-    2. Interact with the page
-    3. Assert something about the page against your expectations
-  Look for this pattern in the tests below!
- */
 
-// If you needed to do something before every test case...
-test.beforeEach(() => {
-  // ... you'd put it here.
-  // TODO 5: Is there something we need to do before every test case to avoid repeating code?
+const validUser = { identifier: "shouldwork@brown.edu", password: "shouldworkshouldwork" };
+
+test.beforeEach(async ({ page }) => {
+  await page.goto("http://localhost:8000");
+  await clerk.signIn({
+    page,
+    signInParams: {
+      strategy: "password", 
+      identifier: validUser.identifier,
+      password: validUser.password,
+    },
+  });
 });
 
-/**
- * Don't worry about the "async" yet. We'll cover it in more detail
- * for the next sprint. For now, just think about "await" as something
- * you put before parts of your test that might take time to run,
- * like any interaction with the page.
- */
-test("on page load, i see a login button", async ({ page }) => {
-  // Notice: http, not https! Our front-end is not set up for HTTPs.
-  await page.goto("http://localhost:8000/");
-  await expect(page.getByLabel("Login")).toBeVisible();
+test("homepage elements visible after login", async ({ page }) => {
+  await expect(page.locator(".homepage-header")).toHaveText("Track Your Daily Diet:");
+  await expect(page.getByLabel("calorie input")).toBeVisible();
+  await expect(page.getByLabel("carb input")).toBeVisible();
+  await expect(page.getByLabel("sugar input")).toBeVisible();
+  await expect(page.getByLabel("protein input")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Save Information" })).toBeVisible();
 });
 
-test("on page load, i dont see the input box until login", async ({ page }) => {
-  // Notice: http, not https! Our front-end is not set up for HTTPs.
-  await page.goto("http://localhost:8000/");
-  await expect(page.getByLabel("Sign Out")).not.toBeVisible();
-  await expect(page.getByLabel("dropdown")).not.toBeVisible();
+test("submit nutrient information after login", async ({ page }) => {
+  await page.route("http://localhost:3232/add-daily*", async (route) => {
+    const url = new URL(route.request().url());
+    expect(url.searchParams.get("Calories")).toBe("2000");
+    expect(url.searchParams.get("Carbs")).toBe("250");
+    expect(url.searchParams.get("Sugar")).toBe("30");
+    expect(url.searchParams.get("Protein")).toBe("80");
 
-  // click the login button
-  await page.getByLabel("Login").click();
-  await expect(page.getByLabel("Sign Out")).toBeVisible();
-  await expect(page.getByLabel("dropdown")).toBeVisible();
-});
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ response_type: "success" }),
+    });
+  });
 
-test("on page load, i see a submit button", async ({ page }) => {
-  // TODO 5 WITH TA: Fill this in!
-});
+  const today = new Date().toISOString().split("T")[0];
 
-test("after I click the submit button, i see the dropdown text in the output area", async ({
-  page,
-}) => {
-  // TODO 5 WITH TA: Fill this in to test your button push functionality!
+  await page.fill("#log-date", today);
+  await page.fill('[aria-label="calorie input"]', "2000");
+  await page.fill('[aria-label="carb input"]', "250");
+  await page.fill('[aria-label="sugar input"]', "30");
+  await page.fill('[aria-label="protein input"]', "80");
+
+  await page.click('[aria-label="save-info"]');
 });
