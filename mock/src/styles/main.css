@@ -13,18 +13,7 @@
   color:rgb(0, 0, 0);
 }
 .sidebar ul {
-  list-style: none; /* Removes bullet points */
-}
-.homepage-container {
-  position: absolute;
-  left: 40%;
-  width: 30%;
-  max-width: 800px;
-  top: 0px;
-  display: flex;
-  flex-direction: column;
-  padding-top: 40px;
-}
+  list-style: none; /* Removes bullet points */}
 
 .homepage-header {
   font-size: 32px;
@@ -32,68 +21,41 @@
   margin-bottom: 20px;
 }
 
+.homepage-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: -25%; /* Adjust this for how "high" you want it */
+}
+
+/* 2x2 nutrient grid */
 .input-row {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 20px;
-  flex-wrap: wrap; /* allows wrapping on smaller screens */
+  max-width: 500px;
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
-.input-box-calorie {
-  border: 2px solid rgb(153, 153, 153);
-  left: -15%;
-  top: 120%;
-  position: absolute;
-  border-radius: 12px;
-  padding: 20px;
-  min-width: 150px;
-  text-align: center;
-  background-color: white;
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-  color:rgb(0, 0, 0);
-}
-
+/* Nutrient input box styles */
+.input-box-calorie,
+.input-box-carbo,
+.input-box-sugar,
 .input-box-protein {
   border: 2px solid rgb(153, 153, 153);
-  left: -15%;
-  top: 200%;
-  position: absolute;
   border-radius: 12px;
   padding: 20px;
-  min-width: 150px;
+  width: 200px;
+  max-width: 100%;
+  box-sizing: border-box;
   text-align: center;
   background-color: white;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-  color:rgb(0, 0, 0);
+  color: rgb(0, 0, 0);
 }
-.input-box-carbo {
-  border: 2px solid rgb(153, 153, 153);
-  border-radius: 12px;
-  left: 45%;
-  top: 200%;
-  position: absolute;
-  padding: 20px;
-  min-width: 150px;
-  text-align: center;
-  background-color: white;
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-  color:rgb(0, 0, 0);
-}
-.input-box-sugar {
-  border: 2px solid rgb(153, 153, 153);
-  border-radius: 12px;
-  left: 45%;
-  top: 120%;
-  position: absolute;
-  padding: 20px;
-  min-width: 150px;
-  text-align: center;
-  background-color: white;
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-  color:rgb(0, 0, 0);
-}
-
 .progress-container {
   position: absolute;
   left: 25%;
@@ -170,15 +132,15 @@
 
 .icon {
   position: absolute;
-  left: 20%;
-  top: 280%;
+  left: 75%;
+  top: 5%;
 }
 
 .saveinfo {
   border-radius: 12px;
   position: absolute;
-  left: 80%;
-  top: 130px
+  left: 58%;
+  top: 104px;
 }
 
 .feedback-container {
@@ -210,4 +172,14 @@
   padding: 0;               /* remove default ul padding */
   margin: 0 auto;
   list-style: none;         /* REMOVE bullet points */
+}
+
+.search-box {
+  position: relative;
+  margin-left: 40%;
+}
+
+.search-output {
+  position: relative;
+
 }

@@ -1,14 +1,19 @@
-import { Icon, List, SmilePlus } from "lucide-react";
+import { SmilePlus } from "lucide-react";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import "../../styles/main.css";
 import { Frown, Meh, Smile } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
 import { useDailyData } from "./fetchDaily";
 import { ControlledInputProfile } from "./controlledInputsProfile";
+import { SearchApi } from "./SearchApi";
 
 interface InputProps {
   currentMacro: string;
   setCurrentMacro: Dispatch<SetStateAction<string>>;
+}
+interface mock_set {
+  search_value: string;
+  result: string;
 }
 
 export function HomePage(props: InputProps) {
@@ -17,6 +22,25 @@ export function HomePage(props: InputProps) {
   const [carbString, setCarb] = useState<string>("");
   const [sugarString, setSugar] = useState<string>("");
   const [date, setDate] = useState<string>("");
+  const [search, setSearch] = useState<string>("");
+
+  const [searchOutput, setSearchOutput] = useState<string>("");
+  const [hasSearchOutput, setHasSearchOutput] = useState<boolean>(false);
+
+  const mock_search_set: mock_set[] = [ {
+    search_value: "how much protein does beef have",
+    result: "The amount of protein in beef depends on the cut and preparation method. Here's a general breakdown for cooked, lean beef \
+        100 grams (3.5 oz) of cooked lean ground beef (10% fat) contains about 26 grams of protein \
+        100 grams of steak (e.g., sirloin, ribeye) typically contains 25–28 grams of protein."},
+    {
+      search_value: "how much sugar does 70% dark chocolate have",
+      result: "70% dark chocolate typically contains about 24–28 grams of sugar per 100 grams (3.5 oz), depending on the brand."
+    },
+    {
+      search_value: "how many calories are in 2 pounds of skinless, boneless chicken",
+      result: "Two pounds of skinless, boneless chicken thighs contain approximately 1,090–1,200 calories, depending on fat content and cooking method."
+    }
+  ] 
 
   const { user } = useUser();
 
@@ -63,6 +87,17 @@ export function HomePage(props: InputProps) {
     setProtein("");
   }
 
+  function handleSearch (prompt: string) {
+    const output = mock_search_set.filter((m) => m.search_value == prompt) 
+    if (output.length > 0) {
+      setSearchOutput(output[0].result)
+      setHasSearchOutput(true)
+    }
+    else {
+      setHasSearchOutput(false)
+    }
+  }
+
   const { dailyData, loading } = useDailyData();
   function computeStreak(data: Record<string, any>): number {
     const enteredDates = new Set(Object.keys(data));
@@ -90,9 +125,9 @@ export function HomePage(props: InputProps) {
       return <Frown size={50} />;
     } else if (currentStreak > 0 && currentStreak < 5) {
       return <Meh size={50} />;
-    } else if (currentStreak > 5 && currentStreak < 10) {
+    } else if (currentStreak >= 5 && currentStreak < 10) {
       return <Smile size={50} />;
-    } else if (currentStreak > 10) {
+    } else if (currentStreak >= 10) {
       return <SmilePlus size={50} />;
     }
     return null;
@@ -101,8 +136,7 @@ export function HomePage(props: InputProps) {
   return (
     <div className="homepage-container">
       <h1 className="homepage-header">Track Your Daily Diet!</h1>
-      <div className="input-row">
-        <div>
+      <div className="date">
           <label htmlFor="log-date">Select Date:</label>
           <input
             type="date"
@@ -110,7 +144,8 @@ export function HomePage(props: InputProps) {
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
-        </div>
+      </div>
+      <div className="input-row">
         <div className="input-box-calorie">
           <p>Calories</p>
           <ControlledInputProfile
@@ -147,6 +182,18 @@ export function HomePage(props: InputProps) {
             placeholder="Enter proteins"
           />
         </div>
+      </div>
+        <div className="seach-box">
+        <ControlledInputProfile
+            value={search}
+            setValue={setSearch}
+            ariaLabel="search input"
+            placeholder="Query Here!"
+        />
+        <button className="search-button" onClick={() => handleSearch(search)}>
+          Search
+        </button>
+        <SearchApi output={searchOutput} hasSearch={hasSearchOutput}/>
         <p></p>
         <button
           onClick={() =>
@@ -167,7 +214,7 @@ export function HomePage(props: InputProps) {
         <div className="icon">
           {happySadFace(currentStreak)} Current Day Streak: {currentStreak}
         </div>
-      </div>
+    </div>
     </div>
   );
 }
