@@ -119,7 +119,6 @@ export function HomePage(props: InputProps) {
   }
 
   const currentStreak = computeStreak(dailyData);
-  console.log(dailyData);
   function happySadFace(currentStreak: number): JSX.Element | null {
     if (currentStreak == 0) {
       return <Frown size={50} />;
@@ -135,7 +134,7 @@ export function HomePage(props: InputProps) {
 
   return (
     <div className="homepage-container">
-      <h1 className="homepage-header">Track Your Daily Diet!</h1>
+      <h1 className="homepage-header" aria-label="homepage-greeting">Track Your Daily Diet!</h1>
       <div className="date">
           <label htmlFor="log-date">Select Date:</label>
           <input
@@ -183,17 +182,22 @@ export function HomePage(props: InputProps) {
           />
         </div>
       </div>
-        <div className="seach-box">
-        <ControlledInputProfile
-            value={search}
-            setValue={setSearch}
-            ariaLabel="search input"
-            placeholder="Query Here!"
-        />
+      <div className="search-container">
+        <div className="search-box">
+          <ControlledInputProfile
+          value={search}
+          setValue={setSearch}
+          ariaLabel="search input"
+          placeholder="Query Here!"
+          />
         <button className="search-button" onClick={() => handleSearch(search)}>
           Search
         </button>
-        <SearchApi output={searchOutput} hasSearch={hasSearchOutput}/>
+        </div>
+        <div className="search-output">
+          <SearchApi output={searchOutput} hasSearch={hasSearchOutput} />
+        </div>
+      </div>
         <p></p>
         <button
           onClick={() =>
@@ -208,13 +212,13 @@ export function HomePage(props: InputProps) {
             )
           }
           className="saveinfo"
+          aria-label="save-info"
         >
           Save Information
         </button>
         <div className="icon">
           {happySadFace(currentStreak)} Current Day Streak: {currentStreak}
         </div>
-    </div>
     </div>
   );
 }

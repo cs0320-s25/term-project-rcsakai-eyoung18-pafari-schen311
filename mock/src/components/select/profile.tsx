@@ -135,7 +135,8 @@ export function Profile(props: profileProps) {
 
   return (
     <div className="profile-container">
-      <h1 className="profile-header">Profile</h1>
+      <h1 className="profile-header"
+      aria-label="profile-object">Profile</h1>
 
       <div className="profile-button-group">
         {editMode ? (

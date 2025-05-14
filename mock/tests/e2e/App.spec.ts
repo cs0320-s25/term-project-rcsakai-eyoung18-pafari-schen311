@@ -1,49 +1,61 @@
 import { expect, test } from "@playwright/test";
+import { clerk } from "@clerk/testing/playwright";
 
-/**
-  The general shapes of tests in Playwright Test are:
-    1. Navigate to a URL
-    2. Interact with the page
-    3. Assert something about the page against your expectations
-  Look for this pattern in the tests below!
- */
-
-// If you needed to do something before every test case...
-test.beforeEach(() => {
-  // ... you'd put it here.
-  // TODO 5: Is there something we need to do before every test case to avoid repeating code?
-});
-
-/**
- * Don't worry about the "async" yet. We'll cover it in more detail
- * for the next sprint. For now, just think about "await" as something
- * you put before parts of your test that might take time to run,
- * like any interaction with the page.
- */
-test("on page load, i see a login button", async ({ page }) => {
-  // Notice: http, not https! Our front-end is not set up for HTTPs.
+// Setup
+const validUser = { identifier: "shouldwork@brown.edu", password: "Shouldwork" };
+test.beforeEach(async ({ page }) => {
   await page.goto("http://localhost:8000/");
-  await expect(page.getByLabel("Login")).toBeVisible();
+  await clerk.signIn({ 
+    page, 
+    signInParams: { 
+      strategy: "password", 
+      identifier: validUser.identifier, 
+      password: validUser.password 
+    } 
+  });
 });
 
-test("on page load, i dont see the input box until login", async ({ page }) => {
-  // Notice: http, not https! Our front-end is not set up for HTTPs.
-  await page.goto("http://localhost:8000/");
-  await expect(page.getByLabel("Sign Out")).not.toBeVisible();
-  await expect(page.getByLabel("dropdown")).not.toBeVisible();
-
-  // click the login button
-  await page.getByLabel("Login").click();
-  await expect(page.getByLabel("Sign Out")).toBeVisible();
-  await expect(page.getByLabel("dropdown")).toBeVisible();
+test('All major inputs and buttons are visible', async ({ page }) => {
+  await expect(page.getByLabel('calorie input')).toBeVisible();
+  await expect(page.getByLabel('carb input')).toBeVisible();
+  await expect(page.getByLabel('sugar input')).toBeVisible();
+  await expect(page.getByLabel('protein input')).toBeVisible();
+  await expect(page.getByLabel('search input')).toBeVisible();
+  await expect(page.getByLabel('save-info')).toBeVisible();
 });
 
-test("on page load, i see a submit button", async ({ page }) => {
-  // TODO 5 WITH TA: Fill this in!
+test('Search query for protein returns expected response', async ({ page }) => {
+  const input = page.getByLabel('search input');
+  const button = page.getByRole('button', { name: 'Search' });
+
+  await input.fill('how much protein does beef have');
+  await button.click();
+
+  // Wait for result to be rendered and assert part of the expected text
+  await expect(page.getByText(/cooked lean ground beef/i)).toBeVisible();
+  await expect(page.getByText(/26 grams of protein/i)).toBeVisible();
+});
+test('Home tab renders homepage content', async ({ page }) => {
+  await page.getByText('Home').click();
+  await expect(page.getByLabel("homepage-greeting")).toBeVisible();
 });
 
-test("after I click the submit button, i see the dropdown text in the output area", async ({
-  page,
-}) => {
-  // TODO 5 WITH TA: Fill this in to test your button push functionality!
+test('Progress tab renders compared progress content', async ({ page }) => {
+  await page.getByText('Progress').click();
+  await expect(page.getByText("Select Nutrient")).toBeVisible();
+});
+
+test('Personal Graphs tab renders progress content', async ({ page }) => {
+  await page.getByText('Personal Graphs').click();
+  await expect(page.getByText("Select Nutrient")).toBeVisible();
+});
+
+test('Feedback tab renders feedback content', async ({ page }) => {
+  await page.getByText('Feedback').click();
+  await expect(page.getByText("calories intake is on target")).toBeVisible();
+});
+
+test('Profile tab renders profile content', async ({ page }) => {
+  await page.getByText('Profile').click();
+  await expect(page.getByLabel("profile-object")).toBeVisible();
 });
