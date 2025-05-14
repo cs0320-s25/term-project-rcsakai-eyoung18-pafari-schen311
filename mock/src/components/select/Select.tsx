@@ -10,7 +10,6 @@ import {
   ChartSpline,
   CircleUserRound,
 } from "lucide-react";
-import { Chart } from "chart.js";
 import { ComparedProgress } from "./comparedProgress";
 import { Profile } from "./profile";
 

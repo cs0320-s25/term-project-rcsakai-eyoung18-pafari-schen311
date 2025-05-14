@@ -16,82 +16,42 @@
   list-style: none; /* Removes bullet points */
 }
 .homepage-container {
-  position: absolute;
-  left: 40%;
-  width: 30%;
-  max-width: 800px;
-  top: 0px;
   display: flex;
-  flex-direction: column;
-  padding-top: 40px;
+  flex-direction: column; /* vertical layout */
+  align-items: center;     /* horizontal centering */
+  width: 90%;
+  padding: 20px;
+  margin-top: -27%;
 }
 
 .homepage-header {
   font-size: 32px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
-
 .input-row {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 20px;
-  flex-wrap: wrap; /* allows wrapping on smaller screens */
+  max-width: 500px;
   margin-top: 20px;
 }
 
-.input-box-calorie {
-  border: 2px solid rgb(153, 153, 153);
-  left: -15%;
-  top: 120%;
-  position: absolute;
-  border-radius: 12px;
-  padding: 20px;
-  min-width: 150px;
-  text-align: center;
-  background-color: white;
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-  color:rgb(0, 0, 0);
-}
-
+.input-box-calorie,
+.input-box-carbo,
+.input-box-sugar,
 .input-box-protein {
   border: 2px solid rgb(153, 153, 153);
-  left: -15%;
-  top: 200%;
-  position: absolute;
   border-radius: 12px;
   padding: 20px;
-  min-width: 150px;
+  width: 45%; /* allow two per row */
+  max-width: 250px; /* prevent overly wide boxes */
+  box-sizing: border-box;
   text-align: center;
   background-color: white;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-  color:rgb(0, 0, 0);
-}
-.input-box-carbo {
-  border: 2px solid rgb(153, 153, 153);
-  border-radius: 12px;
-  left: 45%;
-  top: 200%;
-  position: absolute;
-  padding: 20px;
-  min-width: 150px;
-  text-align: center;
-  background-color: white;
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-  color:rgb(0, 0, 0);
-}
-.input-box-sugar {
-  border: 2px solid rgb(153, 153, 153);
-  border-radius: 12px;
-  left: 45%;
-  top: 120%;
-  position: absolute;
-  padding: 20px;
-  min-width: 150px;
-  text-align: center;
-  background-color: white;
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-  color:rgb(0, 0, 0);
+  color: rgb(0, 0, 0);
 }
 
 .progress-container {
@@ -106,7 +66,6 @@
 }
 
 .sign-out-button {
-  /* to finish*/
   position: absolute;
   left: 50%;
   top: -10px;
@@ -170,17 +129,21 @@
 
 .icon {
   position: absolute;
-  left: 20%;
-  top: 280%;
+  left: 45%;
+  top: 60%;
 }
 
 .saveinfo {
   border-radius: 12px;
   position: absolute;
-  left: 80%;
-  top: 130px
+  top: 90px;
+  left: 57%;
 }
-
+.date {
+  position: absolute;
+  top: 90px;
+  left: 40%;
+}
 .feedback-container {
   margin: 2rem auto;
   max-width: 1000px;
@@ -191,7 +154,6 @@
   position: absolute;
   left: 18%;
   top: 30px;
-
   padding-top: 40px;   
   transform: translateY(-80px);
 }
@@ -212,12 +174,19 @@
 }
 
 .search-box {
-  position: absolute;
-  left: 130%;
-  top: 30%;
+  position: relative;
+  margin-top: -30.5%;
+  left: 39%;
+  border-radius: 50px;
 }
 .search-button {
-  position: absolute;
-  left: 175%;
-  top: 70%;
+  position: relative;
+  left: 45%;
+  margin-top: -1.85%;
+}
+.search-output {
+  position: relative;
+  margin-top: 3%;
+  left: 42%;
+  max-width: 30%;
 }

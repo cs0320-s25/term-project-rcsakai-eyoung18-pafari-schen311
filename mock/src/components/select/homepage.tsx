@@ -5,12 +5,17 @@ import { Frown, Meh, Smile } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
 import { useDailyData } from "./fetchDaily";
 import { ControlledInputProfile } from "./controlledInputsProfile";
+import { SearchApi } from "./SearchApi";
 
 interface InputProps {
   currentMacro: string;
   setCurrentMacro: Dispatch<SetStateAction<string>>;
 }
 
+interface searchProps {
+  search_value: string;
+  result: string;
+}
 export function HomePage(props: InputProps) {
   const [calorieString, setCalorie] = useState<string>("");
   const [proteinString, setProtein] = useState<string>("");
@@ -18,9 +23,23 @@ export function HomePage(props: InputProps) {
   const [sugarString, setSugar] = useState<string>("");
   const [date, setDate] = useState<string>("");
   const [search, setSearch] = useState<string>("");
-
+  const [searchOutput, setSearchOutput] = useState<string>("");
+  const [hasSearchOutput, setHasSearchOutput] = useState<boolean>(false);
+  
   const { user } = useUser();
 
+  const mock_search_set: searchProps[] = [
+    {search_value: "how much protein does beef have",
+      result: "The amount of protein in beef depends on the cut and preparation method. Here's a general breakdown for cooked, lean beef: \
+      100 grams (3.5 oz) of cooked lean ground beef (10% fat) contains about 26 grams of protein. \
+      100 grams of steak (e.g., sirloin, ribeye) typically contains 25–28 grams of protein."}, 
+      { search_value: "how much sugar does 70% dark chocolate have",
+      result: "70% dark chocolate typically contains about 24–28 grams of sugar per 100 grams (3.5 oz), depending on the brand."},
+      {
+        search_value: "how many calories are in 2 pounds of skinless, boneless chicken thighs",
+        result: "Two pounds of skinless, boneless chicken thighs contain approximately 1,090–1,200 calories, depending on fat content and cooking method."
+      }
+  ]
   function handleSubmit(values: Record<string, string>, date: string) {
     const uid = user?.id;
 
@@ -63,6 +82,16 @@ export function HomePage(props: InputProps) {
     setSugar("");
     setProtein("");
   }
+  function handleSearch (prompt: string) {
+    const output = mock_search_set.filter((m) => m.search_value == prompt)
+    if (output.length > 0) {
+      setHasSearchOutput(true)
+      setSearchOutput(output[0].result)
+    }
+    else {
+      setHasSearchOutput(false)
+    }
+  }
   
   const { dailyData, loading } = useDailyData();
   function computeStreak(data: Record<string, any>): number {
@@ -91,9 +120,9 @@ export function HomePage(props: InputProps) {
       return <Frown size={50} />;
     } else if (currentStreak > 0 && currentStreak < 5) {
       return <Meh size={50} />;
-    } else if (currentStreak > 5 && currentStreak < 10) {
+    } else if (currentStreak >= 5 && currentStreak < 10) {
       return <Smile size={50} />;
-    } else if (currentStreak > 10) {
+    } else if (currentStreak >= 10) {
       return <SmilePlus size={50} />;
     }
     return null;
@@ -102,8 +131,7 @@ export function HomePage(props: InputProps) {
   return (
     <div className="homepage-container">
       <h1 className="homepage-header">Track Your Daily Diet:</h1>
-      <div className="input-row">
-        <div>
+      <div className="date">
           <label htmlFor="log-date">Select Date:  </label>
           <input
             type="date"
@@ -112,6 +140,8 @@ export function HomePage(props: InputProps) {
             onChange={(e) => setDate(e.target.value)}
           />
         </div>
+    
+      <div className="input-row">
         <div className="input-box-calorie">
           <p>Calories</p>
           <ControlledInputProfile
@@ -148,19 +178,25 @@ export function HomePage(props: InputProps) {
             placeholder="Enter proteins"
           />
         </div>
-        <div className="search-box">
-          <p>How many nutrients did my food have?</p>
-          <ControlledInputProfile
+      </div>
+      <div className="search-box">
+        <p>How many nutrients did my food have?</p>
+        <ControlledInputProfile
             value={search}
             setValue={setSearch}
             ariaLabel="search inpiut"
             placeholder="Inquire"
-          />
-        </div>
-        <p></p>
-        <button
-          onClick={() =>
-            handleSubmit(
+        />
+      </div>
+      <button onClick={() => handleSearch(search)}
+      className="search-button">
+      Search
+      </button>
+      <SearchApi output={searchOutput} hasSearch={hasSearchOutput}/>
+      <p></p>
+      <button
+        onClick={() =>
+          handleSubmit(
               {
                 calories: calorieString,
                 carbs: carbString,
@@ -169,15 +205,14 @@ export function HomePage(props: InputProps) {
               },
               date
             )
-          }
-          className="saveinfo"
-          aria-label="save-button"
-        >
-          Save Information
-        </button>
-        <div className="icon">
-          {happySadFace(currentStreak)} Current Day Streak: {currentStreak}
-        </div>
+        }
+        className="saveinfo"
+        aria-label="save-button"
+      >
+        Save Information
+      </button>
+      <div className="icon">
+        {happySadFace(currentStreak)} Current Day Streak: {currentStreak}
       </div>
     </div>
   );
