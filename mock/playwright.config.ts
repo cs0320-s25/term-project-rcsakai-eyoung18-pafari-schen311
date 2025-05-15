@@ -33,20 +33,26 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
+      name: "auth",
+      testMatch: /global\.setup\.ts/,
+    },
+    {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      dependencies: ["auth"], 
     },
-
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
+      dependencies: ["auth"], 
     },
-
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
+      dependencies: ["auth"], 
     },
-
+  ],
+  
     /* Test against mobile viewports. */
     // {
     //   name: 'Mobile Chrome',
@@ -66,7 +72,6 @@ export default defineConfig({
     //   name: 'Google Chrome',
     //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     // },
-  ],
 
   /* Run your local dev server before starting the tests */
   webServer: {
