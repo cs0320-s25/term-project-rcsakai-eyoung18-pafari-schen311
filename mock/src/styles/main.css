@@ -130,14 +130,14 @@
 .icon {
   position: absolute;
   left: 45%;
-  top: 60%;
+  top: 65%;
 }
 
 .saveinfo {
   border-radius: 12px;
   position: absolute;
-  top: 90px;
   left: 57%;
+  top: 110px;
 }
 .date {
   position: absolute;
