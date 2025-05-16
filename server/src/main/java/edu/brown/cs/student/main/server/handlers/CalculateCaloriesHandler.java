@@ -84,8 +84,8 @@ public class CalculateCaloriesHandler implements Route {
       String rawEquation = entry.equation();
       double calories = evaluateEquation(rawEquation, age, height, weight);
       double protein = Math.round(weight * 0.8 * 10.0) / 10.0;
-      double carbs = Math.round(calories * 0.55) / 4.0;
-      double sugar = (calories * 0.10) / 4.0;
+      double carbs = Math.round(calories * 0.55 / 4.0 * 10.0) / 10.0;
+      double sugar = Math.round(calories * 0.10 * 10.0 / 4.0 ) / 10.0;
 
       responseMap.put("response_type", "success");
       responseMap.put("calories", calories);

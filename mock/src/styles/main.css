@@ -10,7 +10,7 @@
   overflow-y: auto; /* Allows internal scrolling if content overflows */
   padding: 20px;
   gap: 1.5;
-  color:rgb(0, 0, 0);
+  color: rgb(0, 0, 0);
 }
 .sidebar ul {
   list-style: none; /* Removes bullet points */
@@ -18,7 +18,7 @@
 .homepage-container {
   display: flex;
   flex-direction: column; /* vertical layout */
-  align-items: center;     /* horizontal centering */
+  align-items: center; /* horizontal centering */
   width: 90%;
   padding: 20px;
   margin-top: -27%;
@@ -89,7 +89,7 @@
   width: 50%;
   padding: 2rem;
   margin: 0 auto;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
 }
 
 .profile-button-group {
@@ -154,23 +154,23 @@
   position: absolute;
   left: 18%;
   top: 30px;
-  padding-top: 40px;   
+  padding-top: 40px;
   transform: translateY(-80px);
 }
 
 .feedback-card {
-  position: static;  
+  position: static;
   flex: 1 1 220px;
   margin: 10px;
 }
 .feedback-list {
   display: flex;
-  flex-wrap: wrap;          
-  justify-content: center;  
-  gap: 2rem;                
-  padding: 0;               
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  padding: 0;
   margin: 0 auto;
-  list-style: none;         
+  list-style: none;
 }
 
 .search-box {

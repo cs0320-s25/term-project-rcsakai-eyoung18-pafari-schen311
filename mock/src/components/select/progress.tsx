@@ -28,7 +28,6 @@ export interface tableLayout {
   data: Array<Record<string, number[]>>;
 }
 
-
 export const mock_set: tableLayout = {
   headers: ["Calories", "Sugar", "Carbs", "Protein"],
   data: [
@@ -60,7 +59,7 @@ export function Progress() {
     Carbs: "Carbs",
     Protein: "Protein",
   };
-  
+
   const nutrientColors: Record<string, string> = {
     Calories: "red",
     Sugar: "orange",
@@ -100,9 +99,9 @@ export function Progress() {
 
     setLabels(dates);
     setChartData(nutrients);
-    }, [dailyData, loading]);
+  }, [dailyData, loading]);
 
-    console.log(dailyData)
+  console.log(dailyData);
 
   const chart: ChartData<"line"> = {
     labels,
@@ -131,7 +130,7 @@ export function Progress() {
       {chart && chart.datasets[0].data.length > 0 ? (
         <Line data={chart} />
       ) : (
-        <p>No mock data available!</p>
+        <p>No daily inputs yet!</p>
       )}
     </div>
   );

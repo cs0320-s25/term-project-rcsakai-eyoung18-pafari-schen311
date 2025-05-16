@@ -25,21 +25,29 @@ export function HomePage(props: InputProps) {
   const [search, setSearch] = useState<string>("");
   const [searchOutput, setSearchOutput] = useState<string>("");
   const [hasSearchOutput, setHasSearchOutput] = useState<boolean>(false);
-  
+
   const { user } = useUser();
 
   const mock_search_set: searchProps[] = [
-    {search_value: "how much protein does beef have",
-      result: "The amount of protein in beef depends on the cut and preparation method. Here's a general breakdown for cooked, lean beef: \
+    {
+      search_value: "how much protein does beef have",
+      result:
+        "The amount of protein in beef depends on the cut and preparation method. Here's a general breakdown for cooked, lean beef: \
       100 grams (3.5 oz) of cooked lean ground beef (10% fat) contains about 26 grams of protein. \
-      100 grams of steak (e.g., sirloin, ribeye) typically contains 25–28 grams of protein."}, 
-      { search_value: "how much sugar does 70% dark chocolate have",
-      result: "70% dark chocolate typically contains about 24–28 grams of sugar per 100 grams (3.5 oz), depending on the brand."},
-      {
-        search_value: "how many calories are in 2 pounds of skinless, boneless chicken thighs",
-        result: "Two pounds of skinless, boneless chicken thighs contain approximately 1,090–1,200 calories, depending on fat content and cooking method."
-      }
-  ]
+      100 grams of steak (e.g., sirloin, ribeye) typically contains 25–28 grams of protein.",
+    },
+    {
+      search_value: "how much sugar does 70% dark chocolate have",
+      result:
+        "70% dark chocolate typically contains about 24–28 grams of sugar per 100 grams (3.5 oz), depending on the brand.",
+    },
+    {
+      search_value:
+        "how many calories are in 2 pounds of skinless, boneless chicken thighs",
+      result:
+        "Two pounds of skinless, boneless chicken thighs contain approximately 1,090–1,200 calories, depending on fat content and cooking method.",
+    },
+  ];
   function handleSubmit(values: Record<string, string>, date: string) {
     const uid = user?.id;
 
@@ -82,17 +90,16 @@ export function HomePage(props: InputProps) {
     setSugar("");
     setProtein("");
   }
-  function handleSearch (prompt: string) {
-    const output = mock_search_set.filter((m) => m.search_value == prompt)
+  function handleSearch(prompt: string) {
+    const output = mock_search_set.filter((m) => m.search_value == prompt);
     if (output.length > 0) {
-      setHasSearchOutput(true)
-      setSearchOutput(output[0].result)
-    }
-    else {
-      setHasSearchOutput(false)
+      setHasSearchOutput(true);
+      setSearchOutput(output[0].result);
+    } else {
+      setHasSearchOutput(false);
     }
   }
-  
+
   const { dailyData, loading } = useDailyData();
   function computeStreak(data: Record<string, any>): number {
     const enteredDates = new Set(Object.keys(data));
@@ -130,17 +137,21 @@ export function HomePage(props: InputProps) {
 
   return (
     <div className="homepage-container">
-      <h1 className="homepage-header">Track Your Daily Diet:</h1>
-      <div className="date">
-          <label htmlFor="log-date">Select Date:  </label>
-          <input
-            type="date"
-            id="log-date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-        </div>
-    
+      <h1 className="homepage-header">Track Your Daily Diet</h1>
+
+      <div className="form-section">
+        <label htmlFor="log-date" className="date-label">
+          Select Date:
+        </label>
+        <input
+          type="date"
+          id="log-date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          className="date-input"
+        />
+      </div>
+
       <div className="input-row">
         <div className="input-box-calorie">
           <p>Calories</p>
@@ -182,29 +193,28 @@ export function HomePage(props: InputProps) {
       <div className="search-box">
         <p>How many nutrients did my food have?</p>
         <ControlledInputProfile
-            value={search}
-            setValue={setSearch}
-            ariaLabel="search inpiut"
-            placeholder="Inquire"
+          value={search}
+          setValue={setSearch}
+          ariaLabel="search inpiut"
+          placeholder="Inquire"
         />
       </div>
-      <button onClick={() => handleSearch(search)}
-      className="search-button">
-      Search
+      <button onClick={() => handleSearch(search)} className="search-button">
+        Search
       </button>
-      <SearchApi output={searchOutput} hasSearch={hasSearchOutput}/>
+      <SearchApi output={searchOutput} hasSearch={hasSearchOutput} />
       <p></p>
       <button
         onClick={() =>
           handleSubmit(
-              {
-                calories: calorieString,
-                carbs: carbString,
-                sugar: sugarString,
-                protein: proteinString,
-              },
-              date
-            )
+            {
+              calories: calorieString,
+              carbs: carbString,
+              sugar: sugarString,
+              protein: proteinString,
+            },
+            date
+          )
         }
         className="saveinfo"
         aria-label="save-button"

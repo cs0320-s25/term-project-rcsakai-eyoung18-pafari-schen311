@@ -38,10 +38,10 @@ export function ComparedProgress() {
   };
 
   const recommendedMap: Record<string, number> = {
-    Calories: 2000,
-    Sugar: 15,
-    Carbs: 40,
-    Protein: 30,
+    Calories: 0,
+    Sugar: 0,
+    Carbs: 0,
+    Protein: 0,
   };
 
   const legendSymbols = ["■", "●", "▲"];
@@ -152,7 +152,7 @@ export function ComparedProgress() {
 
     if (rec != null) {
       datasets.push({
-        label: "Recommended",
+        label: nutrientKey === "Sugar" ? "Maximum Recommended" : "Recommended",
         data: [rec],
         backgroundColor: "lightcoral",
         borderColor: "red",
