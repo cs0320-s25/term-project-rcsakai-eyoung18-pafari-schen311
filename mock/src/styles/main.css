@@ -21,7 +21,7 @@
   align-items: center; /* horizontal centering */
   width: 90%;
   padding: 20px;
-  margin-top: -27%;
+  margin-top: -25%;
 }
 
 .homepage-header {
@@ -130,17 +130,17 @@
 .icon {
   position: absolute;
   left: 45%;
-  top: 65%;
+  top: 55%;
 }
 
 .saveinfo {
   border-radius: 12px;
   position: absolute;
-  left: 57%;
-  top: 90px;
+  left: 54%;
+  top: 82px;
 }
 .date {
-  position: absolute;
+  position: flex;
   top: 90px;
   left: 40%;
 }
@@ -173,7 +173,8 @@
   list-style: none;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -183,12 +184,12 @@ html, body {
 .search-box {
   position: relative;
   margin-top: -30.5%;
-  left: 39%;
+  left: 35%;
   border-radius: 50px;
 }
 .search-button {
   position: relative;
-  left: 45%;
+  left: 41%;
   margin-top: -1.85%;
 }
 .search-output {
