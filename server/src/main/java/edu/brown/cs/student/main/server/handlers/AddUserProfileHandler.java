@@ -1,5 +1,7 @@
 package edu.brown.cs.student.main.server.handlers;
 
+import static spark.utils.StringUtils.isBlank;
+
 import edu.brown.cs.student.main.server.storage.StorageInterface;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,24 +35,40 @@ public class AddUserProfileHandler implements Route {
       String heightUnit = request.queryParams("heightUnit");
       String weightUnit = request.queryParams("weightUnit");
 
-      if (uid == null
-          || name == null
-          || sex == null
-          || birthday == null
-          || height == null
-          || weight == null
-          || activityLevel == null
-          || heightUnit == null
-          || weightUnit == null) {
-        throw new IllegalArgumentException("Missing one or more required parameters.");
+      if (isBlank(uid) || isBlank(name) || isBlank(sex) || isBlank(birthday) ||
+          isBlank(height) || isBlank(weight) || isBlank(activityLevel) ||
+          isBlank(heightUnit) || isBlank(weightUnit)) {
+        response.status(400);
+        responseMap.put("response_type", "error");
+        responseMap.put("error", "Missing one or more required parameters.");
+        return Utils.toMoshiJson(responseMap);
       }
 
-      double heightVal = Double.parseDouble(height);
+      double heightVal;
+      double weightVal;
+
+      try {
+        heightVal = Double.parseDouble(height);
+      } catch (NumberFormatException e) {
+        response.status(400);
+        responseMap.put("response_type", "error");
+        responseMap.put("error", "Invalid height format: must be a number.");
+        return Utils.toMoshiJson(responseMap);
+      }
+
       if ("in".equals(heightUnit)) {
         heightVal *= 2.54;
       }
 
-      double weightVal = Double.parseDouble(weight);
+      try {
+        weightVal = Double.parseDouble(weight);
+      } catch (NumberFormatException e) {
+        response.status(400);
+        responseMap.put("response_type", "error");
+        responseMap.put("error", "Invalid weight format: must be a number.");
+        return Utils.toMoshiJson(responseMap);
+      }
+
       if ("lbs".equals(weightUnit)) {
         weightVal *= 0.453592;
       }
@@ -82,16 +100,18 @@ public class AddUserProfileHandler implements Route {
       profileData.put("ageGroup", ageGroup);
       profileData.put("heightUnit", heightUnit);
       profileData.put("weightUnit", weightUnit);
-      profileData.put("time", LocalDateTime.now().toString());
 
       String docId = "profile-" + uid;
 
       storageHandler.addDocument("profiles", docId, profileData);
 
+      response.status(200);
       responseMap.put("response_type", "success");
+      responseMap.put("savedData", profileData);
     } catch (Exception e) {
       e.printStackTrace();
-      responseMap.put("response_type", "failure");
+      response.status(500);
+      responseMap.put("response_type", "error");
       responseMap.put("error", e.getMessage());
     }
 

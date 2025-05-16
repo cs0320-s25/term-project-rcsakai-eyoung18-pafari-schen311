@@ -1,5 +1,6 @@
 package edu.brown.cs.student.main.server.storage;
 
+import com.google.cloud.firestore.DocumentSnapshot;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -21,4 +22,6 @@ public interface StorageInterface {
   void clearUser(String uid) throws InterruptedException, ExecutionException;
 
   public void deleteDocument(String pins, String string);
+
+  DocumentSnapshot getUserProfile(String uid) throws Exception;
 }

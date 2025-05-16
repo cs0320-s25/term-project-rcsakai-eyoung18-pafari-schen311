@@ -14,7 +14,7 @@ import spark.Route;
 
 public class CalculateCaloriesHandler implements Route {
   private final StorageInterface storageHandler;
-  private final List<CalorieEquationEntry> equationTable;
+  public final List<CalorieEquationEntry> equationTable;
 
   public CalculateCaloriesHandler(StorageInterface storageHandler) {
     this.storageHandler = storageHandler;
@@ -38,8 +38,7 @@ public class CalculateCaloriesHandler implements Route {
     }
 
     try {
-      Firestore db = FirestoreClient.getFirestore();
-      DocumentSnapshot userData = db.collection("profiles").document(uid).get().get();
+      DocumentSnapshot userData = this.storageHandler.getUserProfile(uid);
 
       if (userData == null || !userData.exists()) {
         responseMap.put("response_type", "failure");
@@ -92,7 +91,7 @@ public class CalculateCaloriesHandler implements Route {
       responseMap.put("sugar", sugar);
       responseMap.put("equation", rawEquation);
     } catch (Exception e) {
-      responseMap.put("response_type", "failure");
+      responseMap.put("response_type", "error");
       responseMap.put("error", "Failed to calculate calories: " + e.getMessage());
     }
 

@@ -27,8 +27,18 @@ public class AddDailyNutrientsHandler implements Route {
       String carbs = request.queryParams("carbs");
       String protein = request.queryParams("protein");
 
-      if (uid == null || calories == null || sugar == null || carbs == null || protein == null) {
-        throw new IllegalArgumentException("Missing one or more required parameters.");
+      if (uid == null || date == null) {
+        response.status(400);
+        responseMap.put("response_type", "error");
+        responseMap.put("error", "Missing uid or date");
+        return Utils.toMoshiJson(responseMap);
+      }
+
+      if (calories == null || sugar == null || carbs == null || protein == null) {
+        response.status(400);
+        responseMap.put("response_type", "error");
+        responseMap.put("error", "Missing one or more required parameters.");
+        return Utils.toMoshiJson(responseMap);
       }
 
       Map<String, Object> dailyNutrients = new HashMap<>();
@@ -38,17 +48,18 @@ public class AddDailyNutrientsHandler implements Route {
       dailyNutrients.put("Carbs", carbs);
       dailyNutrients.put("Protein", protein);
       dailyNutrients.put("date", date);
-      dailyNutrients.put("time", LocalDateTime.now().toString());
 
       String docId = "profile-" + uid;
 
       storageHandler.addDaily("profiles", docId, "daily_logs", date, dailyNutrients);
 
+      response.status(200);
       responseMap.put("response_type", "success");
       responseMap.put("savedData", dailyNutrients);
     } catch (Exception e) {
       e.printStackTrace();
-      responseMap.put("response_type", "failure");
+      response.status(500);
+      responseMap.put("response_type", "error");
       responseMap.put("error", e.getMessage());
     }
 

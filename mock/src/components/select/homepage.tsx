@@ -48,6 +48,12 @@ export function HomePage(props: InputProps) {
         "Two pounds of skinless, boneless chicken thighs contain approximately 1,090–1,200 calories, depending on fat content and cooking method.",
     },
   ];
+
+  function isPositiveNumber(value: string): boolean {
+    const num = Number(value);
+    return value !== "" && !isNaN(num) && num >= 0;
+  }
+
   function handleSubmit(values: Record<string, string>, date: string) {
     const uid = user?.id;
 
@@ -64,6 +70,15 @@ export function HomePage(props: InputProps) {
       console.error("Date cannot be in the future.");
       alert("Please select a date that is not in the future.");
       return;
+    }
+
+    const keys = ["calories", "sugar", "carbs", "protein"];
+    for (const key of keys) {
+      const val = values[key];
+      if (val && !isPositiveNumber(val)) {
+        alert(`Invalid input for ${key}. Please enter a positive number.`);
+        return;
+      }
     }
 
     const params = new URLSearchParams({
@@ -103,8 +118,8 @@ export function HomePage(props: InputProps) {
   const { dailyData, loading } = useDailyData();
   function getLocalYYYYMMDD(date = new Date()) {
     const yyyy = date.getFullYear();
-    const mm = String(date.getMonth() + 1).padStart(2, '0');
-    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
     return `${yyyy}-${mm}-${dd}`;
   }
   function computeStreak(data: Record<string, any>): number {
@@ -114,14 +129,14 @@ export function HomePage(props: InputProps) {
     let currentDate = new Date();
 
     while (true) {
-      const dateStr = getLocalYYYYMMDD(currentDate)
+      const dateStr = getLocalYYYYMMDD(currentDate);
       if (enteredDates.has(dateStr)) {
-        console.log("this works")
+        console.log("this works");
         streak += 1;
         currentDate.setDate(currentDate.getDate() - 1);
       } else {
-        console.log(dateStr)
-        console.log(enteredDates.has(dateStr))
+        console.log(dateStr);
+        console.log(enteredDates.has(dateStr));
         break;
       }
     }
@@ -163,7 +178,7 @@ export function HomePage(props: InputProps) {
             value={calorieString}
             setValue={setCalorie}
             ariaLabel="calorie input"
-            placeholder="Enter calories"
+            placeholder="Enter calories in kcal"
           />
         </div>
         <div className="input-box-carbo">
@@ -172,7 +187,7 @@ export function HomePage(props: InputProps) {
             value={carbString}
             setValue={setCarb}
             ariaLabel="carb input"
-            placeholder="Enter carbs"
+            placeholder="Enter carbs in g"
           />
         </div>
         <div className="input-box-sugar">
@@ -181,7 +196,7 @@ export function HomePage(props: InputProps) {
             value={sugarString}
             setValue={setSugar}
             ariaLabel="sugar input"
-            placeholder="Enter sugars"
+            placeholder="Enter sugars in g"
           />
         </div>
         <div className="input-box-protein">
@@ -190,7 +205,7 @@ export function HomePage(props: InputProps) {
             value={proteinString}
             setValue={setProtein}
             ariaLabel="protein input"
-            placeholder="Enter proteins"
+            placeholder="Enter proteins in g"
           />
         </div>
       </div>

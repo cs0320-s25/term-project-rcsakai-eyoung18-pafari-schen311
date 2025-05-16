@@ -4,6 +4,7 @@ import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
@@ -92,6 +93,12 @@ public class FirebaseUtilities implements StorageInterface {
       System.err.println("Error removing user : " + uid);
       System.err.println(e.getMessage());
     }
+  }
+
+  @Override
+  public DocumentSnapshot getUserProfile(String uid) throws Exception {
+    Firestore db = FirestoreClient.getFirestore();
+    return db.collection("profiles").document(uid).get().get();
   }
 
   private void deleteDocument(DocumentReference doc) throws Exception {

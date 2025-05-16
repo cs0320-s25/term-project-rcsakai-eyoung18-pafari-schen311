@@ -83,9 +83,9 @@ export function Profile(props: profileProps) {
   }, [user?.id]);
 
   function handleSave() {
-    const safeHeightUnit = "cm" || heightUnit;
-    const safeWeightUnit = "kg" || weightUnit;
-    const safeActivityLevel = "Inactive" || activityLevel;
+    const safeHeightUnit = heightUnit || "cm";
+    const safeWeightUnit = weightUnit || "kg";
+    const safeActivityLevel = activityLevel || "Inactive";
 
     props.setInformation([
       name,
