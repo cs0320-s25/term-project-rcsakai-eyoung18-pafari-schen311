@@ -204,9 +204,13 @@ export function Feedback() {
       {feedback.length === 0 ? (
         <p>No data yet. Please input some daily entries.</p>
       ) : (
-        <>
-          <div className="overall-score-box" style={{ marginBottom: "1.5rem" }}>
-            <h3>Overall Score: {overallScore}/100</h3>
+        <ul className="feedback-list">
+          <li
+            className="input-box-calorie feedback-card"
+            style={{ marginBottom: "1rem" }}
+          >
+            <h4>Overall Score</h4>
+            <p>Score: {overallScore}/100</p>
             <p>
               {overallScore > 90
                 ? "Excellent job maintaining a balanced diet!"
@@ -216,40 +220,35 @@ export function Feedback() {
                 ? "Fair, but there is room for improvement."
                 : "Consider making significant changes to your diet."}
             </p>
-          </div>
-
-          <ul className="feedback-list">
-            {feedback.map((item) => (
-              <li
-                key={item.nutrient}
-                className="input-box-calorie feedback-card"
-                style={{ marginBottom: "1rem" }}
-              >
-                <h4>{item.nutrient}</h4>
+          </li>
+          {feedback.map((item) => (
+            <li
+              key={item.nutrient}
+              className="input-box-calorie feedback-card"
+              style={{ marginBottom: "1rem" }}
+            >
+              <h4>{item.nutrient}</h4>
+              <p>
+                Average Intake:{" "}
+                {item.avg != null
+                  ? `${item.avg.toFixed(2)} ${nutrientUnits[item.nutrient]}`
+                  : "N/A"}
+              </p>
+              <p>
+                {item.nutrient === "Sugar" ? "Max Recommended" : "Recommended"}:{" "}
+                {`${item.rec} ${nutrientUnits[item.nutrient]}`}
+              </p>
+              <p>Score: {item.score}/100</p>
+              <p>{item.description}</p>
+              {item.foodRecommendation && (
                 <p>
-                  Average Intake:{" "}
-                  {item.avg != null
-                    ? `${item.avg.toFixed(2)} ${nutrientUnits[item.nutrient]}`
-                    : "N/A"}
+                  <strong>Recommended foods: </strong>
+                  {item.foodRecommendation}
                 </p>
-                <p>
-                  {item.nutrient === "Sugar"
-                    ? "Max Recommended"
-                    : "Recommended"}
-                  : {`${item.rec} ${nutrientUnits[item.nutrient]}`}
-                </p>
-                <p>Score: {item.score}/100</p>
-                <p>{item.description}</p>
-                {item.foodRecommendation && (
-                  <p>
-                    <strong>Recommended foods: </strong>
-                    {item.foodRecommendation}
-                  </p>
-                )}
-              </li>
-            ))}
-          </ul>
-        </>
+              )}
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
