@@ -101,6 +101,12 @@ export function HomePage(props: InputProps) {
   }
 
   const { dailyData, loading } = useDailyData();
+  function getLocalYYYYMMDD(date = new Date()) {
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
   function computeStreak(data: Record<string, any>): number {
     const enteredDates = new Set(Object.keys(data));
     let streak = 0;
@@ -108,11 +114,14 @@ export function HomePage(props: InputProps) {
     let currentDate = new Date();
 
     while (true) {
-      const dateStr = currentDate.toISOString().split("T")[0];
+      const dateStr = getLocalYYYYMMDD(currentDate)
       if (enteredDates.has(dateStr)) {
+        console.log("this works")
         streak += 1;
         currentDate.setDate(currentDate.getDate() - 1);
       } else {
+        console.log(dateStr)
+        console.log(enteredDates.has(dateStr))
         break;
       }
     }
@@ -121,7 +130,6 @@ export function HomePage(props: InputProps) {
   }
 
   const currentStreak = computeStreak(dailyData);
-  console.log(dailyData);
   function happySadFace(currentStreak: number): JSX.Element | null {
     if (currentStreak == 0) {
       return <Frown size={50} />;
