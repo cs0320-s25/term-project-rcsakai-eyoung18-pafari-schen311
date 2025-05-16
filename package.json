@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "clerk": "^0.8.3",
+    "lucide-react": "^0.503.0",
+    "playwright": "^1.52.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.18"
+  }
+}

@@ -1,0 +1,254 @@
+/* CSS for Main Select interface */
+
+.select-container{
+  /* position: relative;
+  min-height: 95vh;
+  background-color: #cfcfcf; */
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px; /* Adjust width as needed */
+  overflow-y: auto; /* Allows internal scrolling if content overflows */
+  padding: 20px;
+  /* gap: 1.5; */
+  color: rgb(0, 0, 0);
+}
+.sidebar ul {
+  list-style: none; /* Removes bullet points */
+}
+
+.homepage-container {
+  display: flex;
+  flex-direction: column; /* vertical layout */
+  align-items: center; /* horizontal centering */
+  width: 100%;
+  padding: 10px 20px;
+  /* margin-top: -25%; */
+  box-sizing: border-box;
+}
+
+.homepage-header {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.input-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  max-width: 500px;
+  margin-top: 20px;
+}
+
+.input-box-calorie,
+.input-box-carbo,
+.input-box-sugar,
+.input-box-protein {
+  /* border: 2px solid rgb(153, 153, 153);
+  border-radius: 12px;
+  padding: 20px;
+  width: 45%; /* allow two per row */
+  /* max-width: 250px; /* prevent overly wide boxes */
+  /* box-sizing: border-box;
+  text-align: center;
+  background-color: white;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  color: rgb(0, 0, 0);  */
+  border: 2px solid rgb(153, 153, 153);
+  border-radius: 12px;
+  padding: 20px;
+  width: 200px;
+  background-color: white;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.date {
+  margin-bottom: 20px;
+}
+
+.progress-container {
+  position: absolute;
+  left: 25%;
+  width: 100%;
+  max-width: 800px;
+  top: -15px;
+  display: flex;
+  flex-direction: column;
+  padding-top: 40px;
+}
+
+.sign-out-button {
+  position: absolute;
+  left: 50%;
+  top: -10px;
+}
+
+.dropdown {
+  border-radius: 10px;
+}
+
+.profile-header {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.profile-container {
+  position: absolute;
+  left: 30%;
+  top: 0px;
+  width: 50%;
+  padding: 2rem;
+  margin: 0 auto;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.profile-button-group {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.profile-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 2rem;
+  list-style: none;
+  padding: 0;
+}
+
+.profile-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  width: 100%;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.profile-label {
+  width: 100px;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.profile-value {
+  font-size: 1rem;
+}
+
+.icon {
+  /* position: absolute;
+  left: 45%;
+  top: 55%; */
+  margin-top: 30px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.saveinfo {
+  /* border-radius: 12px;
+  position: absolute;
+  left: 54%;
+  top: 82px; */
+  margin-top: 30px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background-color: #007BFF;
+  color: white;
+  cursor: pointer;
+}
+
+/* .date {
+  position: flex;
+  top: 90px;
+  left: 40%;
+} */
+
+.feedback-container {
+  margin: 2rem auto;
+  max-width: 1000px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  /* position: absolute;
+  left: 18%;
+  top: 30px; */
+  padding-top: 40px;
+  /* transform: translateY(-80px); */
+}
+
+.feedback-card {
+  /* position: static; */
+  flex: 1 1 220px;
+  margin: 10px;
+}
+
+.feedback-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  padding: 0;
+  margin: 0 auto;
+  list-style: none;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #d1d1d1; /* match your gray */
+}
+
+.search-box {
+  /* position: relative;
+  margin-top: -30.5%;
+  left: 35%;
+  border-radius: 50px; */
+  margin-top: 30px;
+  text-align: center;
+}
+.search-button {
+  /* position: relative;
+  left: 41%;
+  margin-top: -1.85%; */
+  margin-top: 10px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background-color: #444;
+  color: white;
+  cursor: pointer;
+}
+
+.search-button:hover {
+  background-color: #666;
+}
+
+.search-output {
+  position: relative;
+  margin-top: 3%;
+  left: 42%;
+  max-width: 30%;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 40px 20px;
+  background-color: #d1d1d1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
