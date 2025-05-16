@@ -55,7 +55,7 @@ export function Select() {
   };
 
   return (
-    <div className="select flex">
+    <div className="select-container">
       {/* Sidebar */}
       <div className="sidebar">
         <ul className="flex flex-col space-y-8">
@@ -98,7 +98,7 @@ export function Select() {
       </div>
 
       {/* Page Content */}
-      <div className="flex-1 p-8">{renderPage()}</div>
+      <div className="main-content">{renderPage()}</div>
     </div>
   );
 }
