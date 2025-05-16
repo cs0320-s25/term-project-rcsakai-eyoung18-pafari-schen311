@@ -37,6 +37,13 @@ export function ComparedProgress() {
     Protein: "Protein",
   };
 
+  const nutrientUnits: Record<string, string> = {
+    Calories: "kcal",
+    Sugar: "g",
+    Carbs: "g",
+    Protein: "g",
+  };
+
   const recommendedMap: Record<string, number> = {
     Calories: 0,
     Sugar: 0,
@@ -54,7 +61,8 @@ export function ComparedProgress() {
           label: function (tooltipItem: TooltipItem<"bar">) {
             const datasetIndex = tooltipItem.datasetIndex % 3;
             const symbol = legendSymbols[datasetIndex] || "";
-            return `${symbol} The value of y is ${Number(tooltipItem.raw)}`;
+            const unit = nutrientUnits[nutrient];
+            return `${symbol} ${tooltipItem.dataset.label}: ${tooltipItem.raw} ${unit}`;
           },
         },
       },
@@ -65,6 +73,12 @@ export function ComparedProgress() {
     scales: {
       y: {
         beginAtZero: true,
+        ticks: {
+          callback: function (value) {
+            const unit = nutrientUnits[nutrient];
+            return `${value} ${unit}`;
+          },
+        },
       },
     },
   };

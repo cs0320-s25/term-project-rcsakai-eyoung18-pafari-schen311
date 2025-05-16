@@ -137,18 +137,14 @@ export function HomePage(props: InputProps) {
 
   return (
     <div className="homepage-container">
-      <h1 className="homepage-header">Track Your Daily Diet</h1>
-
-      <div className="form-section">
-        <label htmlFor="log-date" className="date-label">
-          Select Date:
-        </label>
+      <h1 className="homepage-header">Track Your Daily Diet:</h1>
+      <div className="date">
+        <label htmlFor="log-date">Select Date: </label>
         <input
           type="date"
           id="log-date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="date-input"
         />
       </div>
 

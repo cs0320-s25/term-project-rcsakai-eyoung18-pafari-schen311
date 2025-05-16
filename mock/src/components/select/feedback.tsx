@@ -12,6 +12,54 @@ const labelToKey: Record<string, keyof DailyEntry> = {
   Protein: "Protein",
 };
 
+const nutrientUnits: Record<string, string> = {
+  Calories: "kcal",
+  Sugar: "g",
+  Carbs: "g",
+  Protein: "g",
+};
+
+// Mock food recommendations by nutrient and score ranges
+const foodRecommendations: Record<
+  string,
+  {
+    veryLow: string;
+    slightlyLow: string;
+    onTarget: string;
+    slightlyHigh?: string;
+    veryHigh?: string;
+  }
+> = {
+  Calories: {
+    veryLow: "Avocado, nuts, olive oil",
+    slightlyLow: "Whole grains, chicken breast",
+    onTarget: "Keep doing what you're doing!",
+    slightlyHigh: "Monitor portion sizes",
+    veryHigh: "Reduce fried foods and sugary drinks",
+  },
+  Sugar: {
+    veryLow: "No special recommendation",
+    slightlyLow: "No special recommendation",
+    onTarget: "Keep doing what you're doing!",
+    slightlyHigh: "Cut back on desserts and soda",
+    veryHigh: "Avoid sweets and processed snacks",
+  },
+  Carbs: {
+    veryLow: "Sweet potatoes, legumes, brown rice",
+    slightlyLow: "Whole grain bread, oats",
+    onTarget: "Keep doing what you're doing!",
+    slightlyHigh: "Reduce refined carbs like white bread",
+    veryHigh: "Avoid sugary snacks and white flour products",
+  },
+  Protein: {
+    veryLow: "Lean meats, beans, tofu",
+    slightlyLow: "Greek yogurt, eggs",
+    onTarget: "Keep doing what you're doing!",
+    slightlyHigh: "Monitor excessive protein supplements",
+    veryHigh: "Balance protein intake to avoid kidney strain",
+  },
+};
+
 export function Feedback() {
   const { dailyData, loading } = useDailyData();
   const { user } = useUser();
@@ -78,6 +126,7 @@ export function Feedback() {
     }
   }
 
+  // Calculate feedback with food recommendations
   const feedback = NUTRIENTS.map((nutrient) => {
     const avg = averages[nutrient];
     const rec = recommended[nutrient];
@@ -98,22 +147,31 @@ export function Feedback() {
     }
 
     let description = "";
+    let foodRecommendation = "";
+
     if (nutrient === "Sugar") {
       if (avg > rec) {
         description = "Too much sugar. Try to reduce your intake.";
+        foodRecommendation = foodRecommendations[nutrient].veryHigh ?? "";
       } else {
         description = "You're staying within the sugar limit. Well done!";
+        foodRecommendation = foodRecommendations.Sugar.onTarget;
       }
     } else if (avg < rec * 0.7) {
       description = `Your ${nutrient.toLowerCase()} intake is very low. Consider increasing it significantly.`;
+      foodRecommendation = foodRecommendations[nutrient].veryLow;
     } else if (avg < rec * 0.9) {
       description = `Your ${nutrient.toLowerCase()} intake is slightly low. Try to increase it.`;
+      foodRecommendation = foodRecommendations[nutrient].slightlyLow;
     } else if (avg > rec * 1.3) {
       description = `Your ${nutrient.toLowerCase()} intake is very high. Consider reducing it significantly.`;
+      foodRecommendation = foodRecommendations[nutrient].veryHigh ?? "";
     } else if (avg > rec * 1.1) {
       description = `Your ${nutrient.toLowerCase()} intake is slightly high. Try to reduce it.`;
+      foodRecommendation = foodRecommendations[nutrient].slightlyHigh ?? "";
     } else {
       description = `Your ${nutrient.toLowerCase()} intake is on target. Great job!`;
+      foodRecommendation = foodRecommendations[nutrient].onTarget;
     }
 
     return {
@@ -122,38 +180,76 @@ export function Feedback() {
       rec,
       score,
       description,
+      foodRecommendation,
     };
-  }).filter(Boolean);
+  }).filter(Boolean) as {
+    nutrient: string;
+    avg: number;
+    rec: number;
+    score: number;
+    description: string;
+    foodRecommendation: string;
+  }[];
+
+  // Calculate overall score (average of all nutrient scores)
+  const overallScore =
+    feedback.length > 0
+      ? Math.round(
+          feedback.reduce((acc, f) => acc + f.score, 0) / feedback.length
+        )
+      : 0;
 
   return (
     <div className="feedback-container">
       {feedback.length === 0 ? (
         <p>No data yet. Please input some daily entries.</p>
       ) : (
-        <ul className="feedback-list">
-          {feedback.map((item) =>
-            item ? (
+        <>
+          <div className="overall-score-box" style={{ marginBottom: "1.5rem" }}>
+            <h3>Overall Score: {overallScore}/100</h3>
+            <p>
+              {overallScore > 90
+                ? "Excellent job maintaining a balanced diet!"
+                : overallScore > 75
+                ? "Good job! Keep improving your diet."
+                : overallScore > 50
+                ? "Fair, but there is room for improvement."
+                : "Consider making significant changes to your diet."}
+            </p>
+          </div>
+
+          <ul className="feedback-list">
+            {feedback.map((item) => (
               <li
                 key={item.nutrient}
                 className="input-box-calorie feedback-card"
+                style={{ marginBottom: "1rem" }}
               >
-                <p>{item.nutrient}</p>
+                <h4>{item.nutrient}</h4>
                 <p>
                   Average Intake:{" "}
-                  {item.avg != null ? item.avg.toFixed(2) : "N/A"}
+                  {item.avg != null
+                    ? `${item.avg.toFixed(2)} ${nutrientUnits[item.nutrient]}`
+                    : "N/A"}
                 </p>
                 <p>
                   {item.nutrient === "Sugar"
                     ? "Max Recommended"
                     : "Recommended"}
-                  : {item.rec}
+                  : {`${item.rec} ${nutrientUnits[item.nutrient]}`}
                 </p>
                 <p>Score: {item.score}/100</p>
                 <p>{item.description}</p>
+                {item.foodRecommendation && (
+                  <p>
+                    <strong>Recommended foods: </strong>
+                    {item.foodRecommendation}
+                  </p>
+                )}
               </li>
-            ) : null
-          )}
-        </ul>
+            ))}
+          </ul>
+        </>
       )}
     </div>
   );

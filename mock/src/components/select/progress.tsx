@@ -9,6 +9,8 @@ import {
   Legend,
   Tooltip,
   ChartData,
+  ChartOptions,
+  TooltipItem,
 } from "chart.js";
 import { useEffect, useRef, useState } from "react";
 import { ControlledSelect } from "./controlledSelect";
@@ -28,13 +30,11 @@ export interface tableLayout {
   data: Array<Record<string, number[]>>;
 }
 
-export const mock_set: tableLayout = {
-  headers: ["Calories", "Sugar", "Carbs", "Protein"],
-  data: [
-    { "1-2-2025": [100, 20, 10, 7] },
-    { "1-7-2025": [120, 15, 15, 4] },
-    { "1-9-2025": [70, 25, 12, 9] },
-  ],
+const nutrientUnits: Record<string, string> = {
+  Calories: "kcal",
+  Sugar: "g",
+  Carbs: "g",
+  Protein: "g",
 };
 
 export function Progress() {
@@ -73,6 +73,34 @@ export function Progress() {
       setSelectedNutrient(nutrientString);
     }
   }, [nutrientString]);
+
+  const options: ChartOptions<"line"> = {
+    responsive: true,
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function (tooltipItem: TooltipItem<"line">) {
+            const unit = nutrientUnits[selectedNutrient] || "";
+            return `${tooltipItem.dataset.label}: ${tooltipItem.raw} ${unit}`;
+          },
+        },
+      },
+      legend: {
+        position: "top",
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: function (value) {
+            const unit = nutrientUnits[selectedNutrient] || "";
+            return `${value} ${unit}`;
+          },
+        },
+      },
+    },
+  };
 
   // Populate from dailyData
   useEffect(() => {
@@ -128,7 +156,7 @@ export function Progress() {
         />
       </div>
       {chart && chart.datasets[0].data.length > 0 ? (
-        <Line data={chart} />
+        <Line data={chart} options={options} />
       ) : (
         <p>No daily inputs yet!</p>
       )}
